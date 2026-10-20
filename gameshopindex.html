@@ -1,1041 +1,334 @@
 <!DOCTYPE html>
 <html lang="my" class="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>LIME GAME STORE — Official Gaming & Digital Hub</title>
-  <meta name="theme-color" content="#060905" />
-  <meta name="description" content="⏰ အော်ဒါတင်နိုင်မည့်အချိန်: မနက် 9:00 AM မှ ည 11:00 PM အထိ။ မြန်မာနိုင်ငံ၏ အမြန်ဆုံးနှင့် စိတ်ချရဆုံး ဂိမ်းနှင့် Digital App Store" />
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@700;800;900&family=Padauk:wght@400;700&display=swap" rel="stylesheet" />
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            lime: { 300: '#bef264', 400: '#a3e635', 500: '#84cc16', 600: '#65a30d' },
-            surface: { 950: '#060905', 900: '#0c120a', 850: '#11190e', 800: '#162113', 700: '#1f2e1b' }
-          },
-          fontFamily: {
-            sans: ['"Inter"', '"Padauk"', 'sans-serif'],
-            display: ['"Orbitron"', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
-
-  <style>
-    * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      background-color: #060905;
-      background-image: radial-gradient(circle at 50% 0%, rgba(163, 230, 53, 0.08) 0%, transparent 55%);
-      color: #f3f4f6;
-      font-family: 'Inter', 'Padauk', sans-serif;
-      margin: 0; padding: 0; overflow-x: hidden; line-height: 1.55; -webkit-font-smoothing: antialiased;
-    }
-    .no-scrollbar::-webkit-scrollbar { display: none; }
-    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-    .glass-nav {
-      background: rgba(6, 9, 5, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    }
-    .glass-dock {
-      background: rgba(12, 18, 10, 0.94); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75);
-    }
-    .bento-card {
-      background: #0c120a; border: 1px solid rgba(255, 255, 255, 0.06);
-      transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
-    }
-    .bento-card:hover { transform: translateY(-2px); background: #11190e; border-color: rgba(163, 230, 53, 0.35); }
-    .bento-card:active { transform: scale(0.98); }
-
-    .apk-icon-wrap { border-radius: 22%; overflow: hidden; background: #162113; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4); }
-
-    .btn-lime { background: #a3e635; color: #060905; transition: all 0.18s ease; }
-    .btn-lime:hover { background: #bef264; }
-    .btn-lime:active { transform: scale(0.97); }
-
-    @keyframes slideUpModal { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    .animate-modal { animation: slideUpModal 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .animate-fade { animation: fadeIn 0.18s ease forwards; }
-
-    /* Side Menu Styles */
-    #sideMenu { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-    #sideMenuOverlay { transition: opacity 0.3s ease; }
-    .menu-btn {
-      background: #11190e; border: 1px solid rgba(255,255,255,0.06);
-      display: flex; align-items: center; gap: 12px; padding: 14px 16px;
-      border-radius: 14px; transition: all 0.2s;
-    }
-    .menu-btn:hover { background: #162113; border-color: rgba(163,230,53,0.3); }
-    .menu-btn:active { transform: scale(0.97); }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LIME ADMIN PANEL — Store Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Orbitron:wght@700;800;900&family=Padauk:wght@400;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+tailwind.config={darkMode:'class',theme:{extend:{colors:{lime:{300:'#bef264',400:'#a3e635',500:'#84cc16',600:'#65a30d'},surface:{950:'#060905',900:'#0c120a',800:'#131c10',700:'#1b2717'}},fontFamily:{sans:['"Inter"','"Padauk"','sans-serif'],display:['"Orbitron"','sans-serif']}}}};
+</script>
+<style>
+*{box-sizing:border-box}
+body{background-color:#060905;background-image:radial-gradient(at 10% 10%,rgba(132,204,22,.12) 0,transparent 45%);color:#f3f4f6;font-family:'Inter','Padauk',sans-serif;margin:0}
+.glass-card{background:rgba(16,24,13,.94);border:1px solid rgba(163,230,53,.18);box-shadow:0 10px 30px -10px rgba(0,0,0,.5)}
+.nav-btn.active{background:#a3e635;color:#060905;font-weight:800;box-shadow:0 4px 15px rgba(163,230,53,.25)}
+input,select,textarea{background:#060905;border:1px solid rgba(255,255,255,.15);color:#fff;transition:all .2s ease}
+input:focus,select:focus{outline:none;border-color:#a3e635;box-shadow:0 0 0 2px rgba(163,230,53,.2)}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#060905}
+::-webkit-scrollbar-thumb{background:#1b2717;border-radius:99px}
+</style>
 </head>
-<body class="min-h-screen pb-28 selection:bg-lime-400 selection:text-surface-950">
+<body class="min-h-screen flex flex-col lg:flex-row">
 
-  <!-- 🖼️ BRAND LOGO SLOT -->
-  <script>
-    const STORE_LOGO_URL = 'logo.png'; // ← သင့် logo path ကို ဒီနေရာမှာ ထည့်ပါ
-  </script>
-
-  <!-- ================= SIDE MENU DRAWER ================= -->
-  <div id="sideMenuOverlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 hidden opacity-0" onclick="closeSideMenu()"></div>
-  
-  <div id="sideMenu" class="fixed top-0 left-0 bottom-0 w-[85%] max-w-[340px] bg-surface-950 border-r border-white/10 z-50 -translate-x-full flex flex-col shadow-2xl">
-    <!-- Menu Header -->
-    <div class="p-5 flex items-center justify-between border-b border-white/5">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-surface-900 border border-white/10 flex items-center justify-center overflow-hidden shrink-0">
-          <img id="sideMenuLogo" src="logo.png" alt="Logo" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/80x80/141d11/a3e635?text=L';" />
-        </div>
-        <div>
-          <h2 class="font-display font-bold text-sm text-white">LIME STORE</h2>
-          <p class="text-[10px] text-gray-400">Main Menu</p>
-        </div>
-      </div>
-      <button onclick="closeSideMenu()" class="w-8 h-8 rounded-lg bg-surface-900 text-gray-400 flex items-center justify-center hover:text-white transition">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-      </button>
+<!-- ADMIN LOGIN SCREEN (အသစ်ထည့်ထားသည်) -->
+<div id="adminLoginScreen" class="fixed inset-0 z-[100] hidden items-center justify-center bg-[#060905] p-4">
+  <div class="w-full max-w-sm rounded-3xl bg-surface-900 border border-lime-400/40 p-6 space-y-4 shadow-2xl">
+    <div class="text-center">
+      <div class="w-16 h-16 rounded-2xl bg-lime-400 text-surface-950 font-display font-black flex items-center justify-center text-xl mx-auto mb-3 shadow-lg">LIME</div>
+      <h2 class="text-lg font-bold text-white">Admin Login</h2>
+      <p class="text-xs text-gray-400 mt-1" id="loginErrorMsg">စီမံခန့်ခွဲသူသာ ဝင်ရောက်နိုင်သည်</p>
     </div>
-
-    <!-- Menu Grid -->
-    <div class="p-4 flex-1 overflow-y-auto space-y-2.5">
-      <div class="grid grid-cols-2 gap-2.5">
-        <button onclick="switchMainTab('store'); closeSideMenu();" class="menu-btn text-left">
-          <svg class="w-4 h-4 text-lime-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-          <span class="text-xs font-semibold text-white">ပင်မဆိုင်</span>
-        </button>
-        
-        <button onclick="switchMainTab('wallet'); closeSideMenu();" class="menu-btn text-left">
-          <svg class="w-4 h-4 text-lime-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-          <span class="text-xs font-semibold text-white">ငွေဖြည့်ရန်</span>
-        </button>
-
-        <button onclick="switchMainTab('orders'); closeSideMenu();" class="menu-btn text-left">
-          <svg class="w-4 h-4 text-lime-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-          <span class="text-xs font-semibold text-white">အော်ဒါများ</span>
-        </button>
-
-        <button onclick="openModal('supportModal'); closeSideMenu();" class="menu-btn text-left">
-          <svg class="w-4 h-4 text-lime-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-          <span class="text-xs font-semibold text-white">ဆက်သွယ်ရန်</span>
-        </button>
-
-        <button onclick="openModal('guideModal'); closeSideMenu();" class="menu-btn text-left">
-          <svg class="w-4 h-4 text-lime-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-          <span class="text-xs font-semibold text-white">လမ်းညွှန်</span>
-        </button>
-
-        <button onclick="switchMainTab('profile'); closeSideMenu();" class="menu-btn text-left">
-          <svg class="w-4 h-4 text-lime-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-          <span class="text-xs font-semibold text-white">ပရိုဖိုင်</span>
-        </button>
-
-        <button onclick="openModal('hoursModal'); closeSideMenu();" class="menu-btn text-left">
-          <svg class="w-4 h-4 text-lime-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          <span class="text-xs font-semibold text-white">ဆိုင်ဖွင့်ချိန်</span>
-        </button>
-      </div>
+    <div class="space-y-3 pt-2">
+      <input id="admPhone" type="tel" placeholder="ဖုန်းနံပါတ်" class="w-full px-3.5 py-3 rounded-xl bg-surface-950 border border-white/15 text-white text-sm"/>
+      <input id="admPassword" type="password" placeholder="Password" class="w-full px-3.5 py-3 rounded-xl bg-surface-950 border border-white/15 text-white text-sm"/>
     </div>
+    <button onclick="loginAdmin()" id="loginBtn" class="w-full py-3.5 rounded-xl bg-lime-400 text-surface-950 font-bold text-sm shadow-lg">Login</button>
   </div>
+</div>
 
+<!-- SIDEBAR -->
+<aside id="adminSidebar" class="hidden w-full lg:w-64 bg-surface-900 border-b lg:border-b-0 lg:border-r border-lime-400/20 p-4 flex-col justify-between shrink-0 lg:sticky lg:top-0 lg:h-screen">
+<div class="space-y-5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-lime-400 text-surface-950 font-display font-black flex items-center justify-center text-sm shadow-lg shadow-lime-400/20">LIME</div>
+<div><h1 class="font-display font-black text-sm text-white tracking-wide">LIME <span class="text-lime-400">ADMIN</span></h1><span class="text-[10px] text-lime-300 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span> Supabase Live</span></div>
+</div>
+</div>
+<nav class="flex lg:flex-col gap-1.5 overflow-x-auto pb-1 lg:pb-0">
+<button onclick="switchAdminTab('dashboard')" id="nav-dashboard" class="nav-btn active shrink-0 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-left flex items-center gap-2 transition">📊 Dashboard</button>
+<button onclick="switchAdminTab('topups')" id="nav-topups" class="nav-btn shrink-0 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:bg-white/5 text-left flex items-center justify-between gap-2 transition"><span>💳 ငွေဖြည့်အတည်ပြုရန်</span><span id="navBadgeTopups" class="px-1.5 py-0.5 rounded-md bg-rose-500 text-white text-[10px] font-bold">0</span></button>
+<button onclick="switchAdminTab('orders')" id="nav-orders" class="nav-btn shrink-0 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:bg-white/5 text-left flex items-center justify-between gap-2 transition"><span>📦 အော်ဒါများ</span><span id="navBadgeOrders" class="px-1.5 py-0.5 rounded-md bg-lime-400/20 text-lime-300 text-[10px] font-bold">0</span></button>
+<button onclick="switchAdminTab('users')" id="nav-users" class="nav-btn shrink-0 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-amber-300 hover:bg-white/5 text-left flex items-center gap-2 transition">👥 User များ</button>
+</nav>
+</div>
+<div class="hidden lg:block space-y-2 pt-4 border-t border-white/10">
+<button onclick="doLogout()" class="w-full py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-semibold text-[11px] border border-rose-400/30">🚪 Logout</button>
+</div>
+</aside>
 
-  <!-- ================= TOP STICKY NAVBAR ================= -->
-  <header class="sticky top-0 z-30 glass-nav">
-    <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between gap-3">
-      
-      <div class="flex items-center gap-2 sm:gap-3">
-        <!-- Hamburger Menu Button -->
-        <button onclick="openSideMenu()" class="w-9 h-9 rounded-xl bg-surface-900 border border-white/10 flex items-center justify-center text-gray-300 hover:text-white transition shrink-0">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
-        </button>
+<!-- MAIN CONTENT -->
+<main id="adminMain" class="hidden flex-1 p-4 sm:p-6 overflow-y-auto space-y-6 max-w-6xl mx-auto w-full">
 
-        <!-- Brand -->
-        <button onclick="switchMainTab('store')" class="flex items-center gap-2 text-left focus:outline-none group">
-          <div class="w-9 h-9 rounded-xl bg-surface-900 border border-white/10 flex items-center justify-center overflow-hidden shrink-0 group-hover:border-lime-400/50 transition">
-            <img id="brandLogo" src="logo.png" alt="Logo" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/80x80/141d11/a3e635?text=L';" />
-          </div>
-          <div class="min-w-0">
-            <div class="flex items-center gap-1.5">
-              <span class="font-display font-extrabold text-sm tracking-wider text-white">LIME <span class="text-lime-400">STORE</span></span>
-              <span id="liveStatusBadge" class="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-semibold bg-lime-400/10 text-lime-300 border border-lime-400/20">
-                <span id="liveStatusDot" class="w-1 h-1 rounded-full bg-lime-400"></span>
-                <span id="liveStatusText">ONLINE</span>
-              </span>
-            </div>
-            <p class="text-[10px] text-gray-400 hidden sm:block">Instant Gaming &amp; Digital Store</p>
-          </div>
-        </button>
-      </div>
+<section id="sec-dashboard" class="space-y-5">
+<div class="flex flex-col sm:flex-row justify-between gap-2 bg-surface-900/90 p-4 rounded-2xl border border-white/10">
+<div><h2 class="font-display font-bold text-lg text-white">📊 ဆိုင်အချက်အလက် ခြုံငုံကြည့်ရန်</h2><p class="text-xs text-gray-400">Supabase Database (Real-time)</p></div>
+<button onclick="loadAdminData()" class="px-3 py-1.5 rounded-lg bg-lime-400/20 text-lime-300 text-xs font-bold self-start">🔄 Refresh</button>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+<div class="glass-card rounded-2xl p-4 cursor-pointer" onclick="switchAdminTab('topups')"><span class="text-[11px] text-gray-400">စောင့်ဆိုင်းနေသော ငွေဖြည့်</span><div id="kpiPendingTopups" class="font-display font-black text-xl text-amber-400 mt-1">0</div></div>
+<div class="glass-card rounded-2xl p-4 cursor-pointer" onclick="switchAdminTab('orders')"><span class="text-[11px] text-gray-400">စောင့်ဆိုင်းနေသော အော်ဒါ</span><div id="kpiPendingOrders" class="font-display font-black text-xl text-lime-400 mt-1">0</div></div>
+<div class="glass-card rounded-2xl p-4"><span class="text-[11px] text-gray-400">User စုစုပေါင်း</span><div id="kpiTotalUsers" class="font-display font-black text-xl text-white mt-1">0</div></div>
+<div class="glass-card rounded-2xl p-4"><span class="text-[11px] text-gray-400">ပစ္စည်း စုစုပေါင်း</span><div id="kpiTotalItems" class="font-display font-black text-xl text-emerald-400 mt-1">0</div></div>
+</div>
+</section>
 
-      <!-- Right Actions -->
-      <div class="flex items-center gap-2">
-        <button onclick="switchMainTab('wallet')" class="flex items-center gap-2 bg-surface-900 hover:bg-surface-850 border border-white/10 hover:border-lime-400/40 rounded-xl pl-2.5 pr-1 py-1 transition">
-          <div class="text-left">
-            <div class="text-[9px] text-gray-400 leading-none">လက်ကျန်</div>
-            <div class="font-display font-bold text-xs text-white mt-0.5"><span id="topBalanceText">25,000</span> <span class="text-lime-400 text-[9px]">Ks</span></div>
-          </div>
-          <span class="w-6 h-6 rounded-lg btn-lime font-bold flex items-center justify-center">
-            <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-          </span>
-        </button>
-      </div>
-    </div>
-  </header>
+<section id="sec-topups" class="hidden space-y-5">
+<div class="bg-surface-900/90 p-4 rounded-2xl border border-white/10"><h2 class="font-display font-bold text-lg text-white">💳 ငွေဖြည့်တောင်းဆိုမှုများ အတည်ပြုရန်</h2></div>
+<div class="glass-card rounded-3xl p-4"><div id="admTopupList" class="space-y-2.5 max-h-[600px] overflow-y-auto"></div></div>
+</section>
 
-  <!-- ================= MAIN ================= -->
-  <main class="max-w-5xl mx-auto px-4 pt-4">
+<section id="sec-orders" class="hidden space-y-5">
+<div class="flex flex-col sm:flex-row justify-between gap-3 bg-surface-900/90 p-4 rounded-2xl border border-white/10"><div><h2 class="font-display font-bold text-lg text-white">📦 အော်ဒါများ စီမံခန့်ခွဲမှု</h2></div></div>
+<div class="glass-card rounded-3xl p-4"><div id="admOrdersList" class="space-y-2.5 max-h-[600px] overflow-y-auto"></div></div>
+</section>
 
-    <!-- Live ticker -->
-    <div class="mb-5 rounded-xl bg-surface-900 border border-white/5 px-3.5 py-2 flex items-center justify-between gap-3">
-      <div class="flex items-center gap-2.5 min-w-0">
-        <span class="w-2 h-2 rounded-full bg-lime-400 shrink-0 animate-pulse"></span>
-        <p id="liveTickerText" class="text-xs text-gray-300 truncate transition-opacity duration-300">ဆိုင်ဖွင့်ချိန် (9:00 AM – 11:00 PM) • ၁ မိနစ်အတွင်း အော်တိုဖြည့်သွင်းပေးနေပါသည်</p>
-      </div>
-      <button onclick="openModal('hoursModal')" class="text-[11px] font-medium text-lime-400 hover:underline shrink-0">အသေးစိတ်</button>
-    </div>
+<section id="sec-users" class="hidden space-y-5">
+<div class="flex flex-col sm:flex-row justify-between gap-3 bg-surface-900/90 p-4 rounded-2xl border border-white/10">
+<div><h2 class="font-display font-bold text-lg text-white">👥 User အကောင့်များ</h2></div>
+<input id="userSearchInput" oninput="renderUsers()" type="text" placeholder="🔍 ရှာရန်..." class="px-4 py-2.5 rounded-xl text-xs w-full sm:w-64 bg-surface-950 border border-white/10 text-white"/>
+</div>
+<div class="glass-card rounded-3xl p-4"><div id="admUserList" class="space-y-2.5 max-h-[600px] overflow-y-auto"></div></div>
+</section>
 
-    <!-- ========== STORE VIEW ========== -->
-    <section id="tab-store" class="space-y-6">
-      <!-- HERO + WALLET SUMMARY -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <!-- Hero Slider -->
-        <div class="lg:col-span-2 relative rounded-2xl overflow-hidden border border-white/10 bg-surface-900 h-48 sm:h-56 select-none">
-          <div id="heroSlides" class="w-full h-full">
-            <div class="hero-slide absolute inset-0 transition-opacity duration-500 opacity-100 cursor-pointer" onclick="openCheckoutModal('mlbb')">
-              <img src="https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/sliders/01M52GRNDB6A83QN8D4V4P4FND.jpg" alt="MLBB" class="w-full h-full object-cover" onerror="this.style.display='none'" />
-              <div class="absolute inset-0 bg-gradient-to-t from-surface-950 via-surface-950/60 to-transparent flex flex-col justify-end p-5">
-                <span class="w-fit px-2 py-0.5 rounded bg-lime-400 text-surface-950 font-display font-bold text-[10px] uppercase mb-2">Instant Server</span>
-                <h2 class="font-display font-bold text-lg sm:text-2xl text-white leading-tight">Mobile Legends Weekly Pass &amp; Diamonds</h2>
-                <p class="text-xs text-gray-300 mt-1">စက္ကန့်ပိုင်းအတွင်း တိုက်ရိုက်တန်းဝင်သည် →</p>
-              </div>
-            </div>
-            <div class="hero-slide absolute inset-0 transition-opacity duration-500 opacity-0 pointer-events-none cursor-pointer" onclick="openCheckoutModal('pubg')">
-              <img src="https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/sliders/01M0J73WJPE12MZV8HAWPH1FZY.jpg" alt="PUBG" class="w-full h-full object-cover" onerror="this.style.display='none'" />
-              <div class="absolute inset-0 bg-gradient-to-t from-surface-950 via-surface-950/60 to-transparent flex flex-col justify-end p-5">
-                <span class="w-fit px-2 py-0.5 rounded bg-amber-400 text-surface-950 font-display font-bold text-[10px] uppercase mb-2">PUBG Global</span>
-                <h2 class="font-display font-bold text-lg sm:text-2xl text-white leading-tight">PUBG Mobile UC Direct Top-Up</h2>
-                <p class="text-xs text-gray-300 mt-1">Player ID ထည့်ရုံဖြင့် အမြန်ဆုံးဖြည့်သွင်းပေးနေပါပြီ →</p>
-              </div>
-            </div>
-            <div class="hero-slide absolute inset-0 transition-opacity duration-500 opacity-0 pointer-events-none cursor-pointer" onclick="openCheckoutModal('telegram')">
-              <img src="https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/sliders/01KMEMACAZRVVTFYVGVVECZGJ4.jpg" alt="Digital" class="w-full h-full object-cover" onerror="this.style.display='none'" />
-              <div class="absolute inset-0 bg-gradient-to-t from-surface-950 via-surface-950/60 to-transparent flex flex-col justify-end p-5">
-                <span class="w-fit px-2 py-0.5 rounded bg-emerald-400 text-surface-950 font-display font-bold text-[10px] uppercase mb-2">Digital Hub</span>
-                <h2 class="font-display font-bold text-lg sm:text-2xl text-white leading-tight">TikTok, Telegram, VPN &amp; CapCut Pro</h2>
-                <p class="text-xs text-gray-300 mt-1">100% Official Warranty ဖြင့် ဝယ်ယူပါ →</p>
-              </div>
-            </div>
-          </div>
-          <div class="absolute top-3 right-3 flex gap-1.5 z-10 bg-black/50 backdrop-blur-md px-2 py-1 rounded-full">
-            <button onclick="changeHeroSlide(0)" class="hero-dot w-5 h-1.5 rounded-full bg-lime-400 transition-all"></button>
-            <button onclick="changeHeroSlide(1)" class="hero-dot w-1.5 h-1.5 rounded-full bg-white/40 transition-all"></button>
-            <button onclick="changeHeroSlide(2)" class="hero-dot w-1.5 h-1.5 rounded-full bg-white/40 transition-all"></button>
-          </div>
-        </div>
+</main>
 
-        <!-- Wallet Card -->
-        <div class="rounded-2xl p-4 sm:p-5 bg-surface-900 border border-white/10 flex flex-col justify-between gap-4">
-          <div class="flex items-start justify-between">
-            <div>
-              <span class="text-[10px] font-display font-semibold uppercase tracking-wider text-gray-400 block">LIME WALLET</span>
-              <h3 class="text-2xl font-display font-black text-white mt-0.5"><span id="bentoBalanceText">25,000</span> <span class="text-xs text-lime-400">Ks</span></h3>
-            </div>
-            <span class="px-2.5 py-0.5 rounded-full bg-lime-400/10 border border-lime-400/20 text-lime-300 text-[11px] font-semibold">VIP Member</span>
-          </div>
-          <div class="grid grid-cols-3 gap-2 text-center">
-            <button onclick="switchMainTab('wallet')" class="p-2.5 rounded-xl btn-lime font-bold text-xs flex flex-col items-center justify-center gap-1">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg><span>ငွေဖြည့်</span>
-            </button>
-            <button onclick="openModal('guideModal')" class="p-2.5 rounded-xl bg-surface-850 hover:bg-surface-800 border border-white/5 text-gray-200 font-medium text-xs flex flex-col items-center justify-center gap-1 transition">
-              <svg class="w-4 h-4 text-lime-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg><span>လမ်းညွှန်</span>
-            </button>
-            <button onclick="openModal('supportModal')" class="p-2.5 rounded-xl bg-surface-850 hover:bg-surface-800 border border-white/5 text-gray-200 font-medium text-xs flex flex-col items-center justify-center gap-1 transition">
-              <svg class="w-4 h-4 text-lime-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/></svg><span>ဆက်သွယ်</span>
-            </button>
-          </div>
-        </div>
-      </div>
+<div id="adjustBalanceModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-md p-4">
+<div class="w-full max-w-md rounded-3xl bg-surface-900 border border-lime-400/40 p-5 space-y-4 text-xs">
+<div class="flex justify-between border-b border-white/10 pb-2.5"><h3 class="font-bold text-sm text-lime-400">💰 User Balance ပြင်ဆင်ရန်</h3><button onclick="document.getElementById('adjustBalanceModal').classList.replace('flex','hidden')" class="text-gray-400">✕</button></div>
+<div><label class="text-gray-400 block mb-1">User</label><input id="adjUserName" type="text" class="w-full px-3 py-2 rounded-xl bg-surface-800 font-bold text-white" readonly/></div>
+<div><label class="text-gray-400 block mb-1">ပမာဏ (+/-)</label><input id="adjBalanceDelta" type="number" placeholder="ဥပမာ - 10000" class="w-full px-3 py-2 rounded-xl font-display font-bold text-lime-300"/></div>
+<div><label class="text-gray-400 block mb-1">အကြောင်းအရာ</label><input id="adjBalanceReason" type="text" value="Admin Bonus" class="w-full px-3 py-2 rounded-xl"/></div>
+<button onclick="executeBalanceAdjust()" class="w-full py-3 rounded-xl bg-lime-400 text-surface-950 font-extrabold shadow mt-2">အတည်ပြုမည်</button>
+</div>
+</div>
 
-      <!-- SEARCH + FILTER -->
-      <div class="sticky top-16 z-20 py-2.5 bg-surface-950/90 backdrop-blur-md">
-        <div class="flex flex-col sm:flex-row gap-2.5">
-          <div class="relative flex-1">
-            <svg class="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <input id="searchInput" type="text" oninput="debouncedSearch()" placeholder="ဂိမ်း သို့မဟုတ် App အမည်ရှာရန်..." class="w-full pl-10 pr-9 py-2 rounded-xl bg-surface-900 border border-white/10 text-xs sm:text-sm text-white placeholder-gray-500 focus:outline-none focus:border-lime-400 transition" />
-            <button id="clearSearchBtn" onclick="clearSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white/10 hover:bg-white/20 text-gray-300 text-xs flex items-center justify-center">✕</button>
-          </div>
-          <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
-            <button onclick="setCategoryFilter('all')" id="cat-all" class="shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold btn-lime transition">အားလုံး</button>
-            <button onclick="setCategoryFilter('games')" id="cat-games" class="shrink-0 px-3.5 py-2 rounded-xl text-xs font-medium bg-surface-900 text-gray-300 hover:text-white border border-white/10 transition">ဂိမ်းများ</button>
-            <button onclick="setCategoryFilter('apps')" id="cat-apps" class="shrink-0 px-3.5 py-2 rounded-xl text-xs font-medium bg-surface-900 text-gray-300 hover:text-white border border-white/10 transition">Digital Apps</button>
-          </div>
-        </div>
-      </div>
+<div id="admToast" class="fixed bottom-5 right-5 z-[60] hidden px-4 py-3 rounded-2xl bg-surface-900 border-2 border-lime-400 text-white text-xs font-bold shadow-2xl"></div>
 
-      <!-- GAMES GRID -->
-      <div id="section-games" class="space-y-3">
-        <div class="flex items-center justify-between">
-          <div>
-            <h2 class="font-display font-bold text-sm sm:text-base text-white">MOBILE GAMES TOP-UP</h2>
-            <p class="text-xs text-gray-400">Player ID ဖြင့် တိုက်ရိုက်ဖြည့်သွင်းနိုင်သော ဂိမ်းများ</p>
-          </div>
-          <span class="text-[11px] font-medium text-lime-400 bg-lime-400/10 px-2.5 py-1 rounded-lg">⚡ Auto Server</span>
-        </div>
-        <div id="gamesBentoGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
-      </div>
+<script>
+const SUPABASE_URL = 'https://zbxlqwbqdgdycaxwkhged.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpieGxxd2JxZGd5Y2F4d2toZ2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MjM3ODUsImV4cCI6MjEwODA5OTc4NX0.Qkriuh5TpbflpzK-LDmtH2XX1lLNu5w-qiVpxCgfCro';
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-      <!-- APPS GRID -->
-      <div id="section-apps" class="space-y-3 pt-2">
-        <div class="flex items-center justify-between">
-          <div>
-            <h2 class="font-display font-bold text-sm sm:text-base text-white">DIGITAL APPS &amp; PREMIUM VPN</h2>
-            <p class="text-xs text-gray-400">Official Warranty ပါဝင်သော Subscription နှင့် Coins များ</p>
-          </div>
-          <span class="text-[11px] font-medium text-emerald-300 bg-emerald-400/10 px-2.5 py-1 rounded-lg">🛡️ အာမခံအပြည့်</span>
-        </div>
-        <div id="appsBentoGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3"></div>
-      </div>
-    </section>
+let ADM_STATE = { me: null, users: [], topups: [], orders: [], totalProducts: 0 };
+let selectedUserIdForAdjust = null;
 
-    <!-- ========== WALLET VIEW ========== -->
-    <section id="tab-wallet" class="hidden max-w-xl mx-auto space-y-4">
-      <div class="rounded-2xl p-5 bg-surface-900 border border-white/10 flex items-center justify-between">
-        <div>
-          <span class="text-[10px] text-lime-400 font-display font-bold uppercase tracking-wider">LIME WALLET</span>
-          <h2 class="text-base sm:text-lg font-bold text-white mt-0.5">အလွယ်တကူ ငွေဖြည့်သွင်းရန်</h2>
-        </div>
-        <div class="text-right">
-          <span class="text-[11px] text-gray-400">လက်ရှိလက်ကျန်</span>
-          <div class="font-display font-black text-lg text-lime-400" id="walletViewBalance">25,000 Ks</div>
-        </div>
-      </div>
+function notify(msg) { const box = document.getElementById('admToast'); box.textContent = msg; box.classList.remove('hidden'); setTimeout(() => box.classList.add('hidden'), 3000); }
+function switchAdminTab(tab) { ['dashboard', 'topups', 'orders', 'users'].forEach(t => { document.getElementById('sec-' + t).classList.toggle('hidden', t !== tab); document.getElementById('nav-' + t).classList.toggle('active', t === tab); }); }
 
-      <div class="rounded-2xl p-5 bg-surface-900 border border-white/10 space-y-4">
-        <h3 class="text-xs font-bold text-gray-300">အဆင့် (၁) — ငွေလွှဲမည့်အကောင့် ရွေးချယ်ပါ</h3>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-          <button type="button" onclick="selectPayChannel('KBZPay', '09798889900', 'U Kyaw Lwin (Lime Store)')" class="pay-channel-btn p-3 rounded-xl bg-surface-850 border-2 border-lime-400 text-left transition">
-            <div class="w-7 h-7 rounded-lg bg-blue-600 text-white font-display font-bold text-[10px] flex items-center justify-center mb-1.5">KPay</div>
-            <div class="text-xs font-bold text-white">KBZPay</div><div class="text-[10px] text-lime-400">Instant</div>
-          </button>
-          <button type="button" onclick="selectPayChannel('WavePay', '09968889900', 'U Kyaw Lwin (Lime Store)')" class="pay-channel-btn p-3 rounded-xl bg-surface-850 border border-white/10 text-left transition">
-            <div class="w-7 h-7 rounded-lg bg-amber-400 text-slate-950 font-display font-bold text-[10px] flex items-center justify-center mb-1.5">Wave</div>
-            <div class="text-xs font-bold text-white">WavePay</div><div class="text-[10px] text-gray-400">Instant</div>
-          </button>
-          <button type="button" onclick="selectPayChannel('AYA Pay', '09458889900', 'U Kyaw Lwin (Lime Store)')" class="pay-channel-btn p-3 rounded-xl bg-surface-850 border border-white/10 text-left transition">
-            <div class="w-7 h-7 rounded-lg bg-rose-600 text-white font-display font-bold text-[10px] flex items-center justify-center mb-1.5">AYA</div>
-            <div class="text-xs font-bold text-white">AYA Pay</div><div class="text-[10px] text-gray-400">Instant</div>
-          </button>
-          <button type="button" onclick="selectPayChannel('CB Pay', '09258889900', 'U Kyaw Lwin (Lime Store)')" class="pay-channel-btn p-3 rounded-xl bg-surface-850 border border-white/10 text-left transition">
-            <div class="w-7 h-7 rounded-lg bg-sky-500 text-white font-display font-bold text-[10px] flex items-center justify-center mb-1.5">CB</div>
-            <div class="text-xs font-bold text-white">CB Pay</div><div class="text-[10px] text-gray-400">Instant</div>
-          </button>
-        </div>
-        <div class="p-4 rounded-xl bg-surface-950 border border-white/10 flex items-center justify-between gap-3">
-          <div>
-            <div class="text-xs text-gray-400"><span id="payChannelLabel" class="text-lime-400 font-bold">KBZPay</span> ဖုန်းနံပါတ်</div>
-            <div id="payPhoneNumber" class="font-display font-bold text-base sm:text-lg text-white tracking-wider mt-0.5">09798889900</div>
-            <div id="payHolderName" class="text-[11px] text-gray-400">Name: U Kyaw Lwin (Lime Store)</div>
-          </div>
-          <button type="button" onclick="copyReceiverPhone()" class="px-3.5 py-2 rounded-xl btn-lime font-bold text-xs shrink-0">Copy ကူးမည်</button>
-        </div>
-      </div>
-
-      <form onsubmit="handleWalletTopUp(event)" class="rounded-2xl p-5 bg-surface-900 border border-white/10 space-y-4">
-        <h3 class="text-xs font-bold text-gray-300">အဆင့် (၂) — ငွေပမာဏနှင့် ပြေစာနံပါတ်ထည့်ပါ</h3>
-        <div class="grid grid-cols-3 gap-2">
-          <button type="button" onclick="fillTopupAmount(5000)" class="py-2 rounded-xl bg-surface-850 hover:bg-surface-800 border border-white/5 text-xs font-semibold text-white transition">5,000 Ks</button>
-          <button type="button" onclick="fillTopupAmount(10000)" class="py-2 rounded-xl bg-surface-850 hover:bg-surface-800 border border-white/5 text-xs font-semibold text-white transition">10,000 Ks</button>
-          <button type="button" onclick="fillTopupAmount(20000)" class="py-2 rounded-xl bg-surface-850 hover:bg-surface-800 border border-white/5 text-xs font-semibold text-white transition">20,000 Ks</button>
-          <button type="button" onclick="fillTopupAmount(30000)" class="py-2 rounded-xl bg-surface-850 hover:bg-surface-800 border border-white/5 text-xs font-semibold text-white transition">30,000 Ks</button>
-          <button type="button" onclick="fillTopupAmount(50000)" class="py-2 rounded-xl bg-surface-850 hover:bg-surface-800 border border-white/5 text-xs font-semibold text-white transition">50,000 Ks</button>
-          <button type="button" onclick="fillTopupAmount(100000)" class="py-2 rounded-xl bg-surface-850 hover:bg-surface-800 border border-white/5 text-xs font-semibold text-white transition">100,000 Ks</button>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div>
-            <label class="text-xs text-gray-400 block mb-1">ငွေပမာဏ (Ks)</label>
-            <input id="topupAmountField" type="number" min="1000" required placeholder="ဥပမာ - 10000" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-950 border border-white/10 text-white text-sm font-semibold focus:outline-none focus:border-lime-400" />
-          </div>
-          <div>
-            <label class="text-xs text-gray-400 block mb-1">ပြေစာ နောက်ဆုံး (၆) လုံး</label>
-            <input id="topupDigitsField" type="text" maxlength="6" pattern="\d{6}" required placeholder="ဥပမာ - 839201" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-950 border border-white/10 text-white text-sm font-display tracking-widest focus:outline-none focus:border-lime-400" />
-          </div>
-        </div>
-        <button type="submit" class="w-full py-3 rounded-xl btn-lime font-bold text-sm">ငွေဖြည့်သွင်းမည်</button>
-      </form>
-    </section>
-
-    <!-- ========== ORDERS VIEW ========== -->
-    <section id="tab-orders" class="hidden max-w-2xl mx-auto space-y-4">
-      <div class="flex items-center justify-between">
-        <div>
-          <h2 class="font-display font-bold text-base sm:text-lg text-white">အော်ဒါမှတ်တမ်းများ</h2>
-          <p class="text-xs text-gray-400">အော်ဒါတစ်ခုချင်းစီကို နှိပ်၍ E-Receipt ကြည့်နိုင်ပါသည်</p>
-        </div>
-        <span id="totalOrdersCount" class="px-3 py-1 rounded-full bg-surface-900 border border-white/10 text-lime-400 text-xs font-bold">1 Order</span>
-      </div>
-      <div id="ordersFeedContainer" class="space-y-2.5"></div>
-    </section>
-
-    <!-- ========== PROFILE VIEW ========== -->
-    <section id="tab-profile" class="hidden max-w-xl mx-auto space-y-4">
-      <div class="rounded-2xl p-5 bg-surface-900 border border-white/10 flex items-center gap-4">
-        <div class="w-14 h-14 rounded-xl bg-surface-950 border border-white/10 overflow-hidden shrink-0">
-          <img id="profileLogo" src="logo.png" alt="Logo" class="w-full h-full object-cover" onerror="this.onerror=null; this.src='https://placehold.co/80x80/141d11/a3e635?text=L';" />
-        </div>
-        <div class="flex-1 min-w-0">
-          <span class="text-[10px] font-bold text-lime-400 uppercase">VIP MEMBER</span>
-          <h3 id="profileDisplayName" class="text-base font-bold text-white truncate">Lime Pro Gamer</h3>
-          <p id="profileDisplayPhone" class="text-xs text-gray-400">09-970001234</p>
-        </div>
-        <button onclick="openModal('authSheetModal')" class="px-3 py-1.5 rounded-lg bg-surface-850 hover:bg-surface-800 border border-white/10 text-xs font-medium text-gray-200 transition">ပြင်ဆင်ရန်</button>
-      </div>
-
-      <div class="rounded-2xl bg-surface-900 border border-white/10 divide-y divide-white/5 overflow-hidden text-sm">
-        <button onclick="openModal('hoursModal')" class="w-full p-4 flex items-center justify-between text-left hover:bg-white/5 transition">
-          <div><div class="font-semibold text-white text-xs sm:text-sm">ဆိုင်ဖွင့်ချိန်နှင့် စည်းကမ်းချက်များ</div><div class="text-xs text-gray-400">မနက် 9:00 AM မှ ည 11:00 PM အထိ</div></div><span class="text-gray-500">›</span>
-        </button>
-        <button onclick="openModal('guideModal')" class="w-full p-4 flex items-center justify-between text-left hover:bg-white/5 transition">
-          <div><div class="font-semibold text-white text-xs sm:text-sm">ဝယ်ယူနည်း လမ်းညွှန်</div><div class="text-xs text-gray-400">အဆင့်ဆင့် လွယ်ကူစွာ ဝယ်ယူနည်း</div></div><span class="text-gray-500">›</span>
-        </button>
-        <button onclick="openModal('supportModal')" class="w-full p-4 flex items-center justify-between text-left hover:bg-white/5 transition">
-          <div><div class="font-semibold text-white text-xs sm:text-sm">Admin သို့ ဆက်သွယ်ရန်</div><div class="text-xs text-gray-400">Telegram / Viber / Messenger</div></div><span class="text-gray-500">›</span>
-        </button>
-        <button onclick="resetDemoStore()" class="w-full p-4 flex items-center justify-between text-left hover:bg-rose-500/10 transition">
-          <div><div class="font-semibold text-rose-400 text-xs sm:text-sm">Demo လက်ကျန်ငွေ ပြန်ဖြည့်မည်</div><div class="text-xs text-gray-500">Reset Demo Wallet &amp; Orders</div></div><span class="text-gray-500">›</span>
-        </button>
-      </div>
-    </section>
-  </main>
-
-  <!-- ========== FLOATING DOCK (အကောင့်ဆိုင် ဖြုတ်ထားပြီး ၄ ခုတည်း) ========== -->
-  <div class="fixed bottom-3 left-1/2 -translate-x-1/2 z-30 w-[92%] max-w-md">
-    <nav class="glass-dock rounded-2xl p-1.5 flex items-center justify-around">
-      <button onclick="switchMainTab('store')" id="dock-store" class="dock-btn flex-1 py-1.5 rounded-xl flex flex-col items-center gap-1 text-lime-400 bg-white/5 font-semibold transition">
-        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="text-[10px]">ပင်မဆိုင်</span>
-      </button>
-      
-      <button onclick="switchMainTab('orders')" id="dock-orders" class="dock-btn flex-1 py-1.5 rounded-xl flex flex-col items-center gap-1 text-gray-400 hover:text-white font-medium transition">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg><span class="text-[10px]">အော်ဒါများ</span>
-      </button>
-      
-      <button onclick="switchMainTab('wallet')" id="dock-wallet" class="mx-1 px-4 py-2 rounded-xl btn-lime font-bold flex flex-col items-center gap-0.5">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg><span class="text-[10px]">ငွေဖြည့်</span>
-      </button>
-      
-      <button onclick="switchMainTab('profile')" id="dock-profile" class="dock-btn flex-1 py-1.5 rounded-xl flex flex-col items-center gap-1 text-gray-400 hover:text-white font-medium transition">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg><span class="text-[10px]">ပရိုဖိုင်</span>
-      </button>
-    </nav>
-  </div>
-
-  <!-- ========== CHECKOUT MODAL ========== -->
-  <div id="checkoutModal" onclick="handleBackdropClick(event, 'checkoutModal')" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-black/75 backdrop-blur-sm p-0 sm:p-4">
-    <div class="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-surface-900 border-t sm:border border-white/15 shadow-2xl p-5 space-y-4 animate-modal">
-      <div class="flex items-center justify-between gap-3 border-b border-white/10 pb-3.5">
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 apk-icon-wrap shrink-0 border border-white/10">
-            <img id="checkoutLogoImg" src="" alt="Logo" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/120x120/141d11/a3e635?text=LIME'" />
-          </div>
-          <div>
-            <h3 id="checkoutTitle" class="font-bold text-base text-white">Game Title</h3>
-            <p id="checkoutSubtitle" class="text-xs text-gray-400">Subtitle</p>
-          </div>
-        </div>
-        <button type="button" onclick="closeModal('checkoutModal')" class="w-8 h-8 rounded-lg bg-surface-850 hover:bg-surface-800 text-gray-400 hover:text-white flex items-center justify-center text-sm">✕</button>
-      </div>
-
-      <form onsubmit="submitQuickOrder(event)" class="space-y-4">
-        <div class="p-3.5 rounded-xl bg-surface-950 border border-white/10 space-y-2.5">
-          <div class="flex items-center justify-between">
-            <label class="text-xs font-bold text-gray-300">၁။ အကောင့် / Player ID ဖြည့်ပါ</label>
-            <button type="button" onclick="verifyPlayerID()" class="text-[11px] font-semibold text-lime-400 hover:underline">ID အမည်စစ်မည်</button>
-          </div>
-          <div id="checkoutDynamicFields"></div>
-          <div id="verifiedPlayerBox" class="hidden px-3 py-2 rounded-lg bg-lime-400/10 border border-lime-400/20 text-xs text-lime-300 flex items-center justify-between">
-            <span>✓ အကောင့်အမည်: <strong id="verifiedPlayerName" class="text-white">LIME_ProPlayer</strong></span>
-            <span class="text-[10px] text-gray-400">Verified</span>
-          </div>
-        </div>
-
-        <!-- Packages Grid -->
-        <div>
-          <div class="flex items-center justify-between mb-2">
-            <label class="text-xs font-bold text-gray-300">၂။ ပက်ကေ့ချ် ရွေးချယ်ပါ</label>
-            <span class="text-[11px] text-gray-400">လက်ကျန်: <strong id="modalWalletBalance" class="text-lime-400">25,000 Ks</strong></span>
-          </div>
-          <div id="checkoutPackagesGrid" class="grid grid-cols-2 gap-2"></div>
-        </div>
-
-        <div class="pt-3 border-t border-white/10 flex items-center justify-between gap-4">
-          <div>
-            <div class="text-[11px] text-gray-400">ကျသင့်ငွေ</div>
-            <div id="checkoutTotalPrice" class="font-display font-black text-lg text-lime-400">0 Ks</div>
-          </div>
-          <button type="submit" class="flex-1 py-3 px-5 rounded-xl btn-lime font-bold text-sm">ယခု ဝယ်ယူမည်</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ========== RECEIPT MODAL ========== -->
-  <div id="receiptModal" onclick="handleBackdropClick(event, 'receiptModal')" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4">
-    <div class="w-full max-w-sm rounded-2xl bg-surface-900 border border-white/15 p-5 space-y-4 animate-modal text-center">
-      <div class="w-12 h-12 mx-auto rounded-full bg-lime-400/15 text-lime-400 flex items-center justify-center text-xl font-bold">✓</div>
-      <div>
-        <span class="text-[10px] font-display font-bold uppercase tracking-widest text-gray-400">E-RECEIPT</span>
-        <h3 class="font-bold text-base text-white mt-0.5">အော်ဒါ အောင်မြင်ပါသည်</h3>
-      </div>
-      <div class="bg-surface-950 rounded-xl p-4 border border-white/10 text-left space-y-2 text-xs">
-        <div class="flex justify-between"><span class="text-gray-400">အော်ဒါနံပါတ်</span><span id="rcpOrderId" class="font-display font-bold text-lime-400">LIME-00000</span></div>
-        <div class="flex justify-between"><span class="text-gray-400">အမျိုးအစား</span><span id="rcpItemTitle" class="font-semibold text-white">Game</span></div>
-        <div class="flex justify-between"><span class="text-gray-400">ပက်ကေ့ချ်</span><span id="rcpPkgName" class="font-semibold text-gray-200">Package</span></div>
-        <div class="flex justify-between"><span class="text-gray-400">လက်ခံသည့် ID</span><span id="rcpTarget" class="font-medium text-gray-300">ID</span></div>
-        <div class="flex justify-between"><span class="text-gray-400">အချိန်</span><span id="rcpTime" class="text-gray-400">Now</span></div>
-        <div class="border-t border-white/10 pt-2 flex justify-between items-center"><span class="text-gray-400">ပေးချေခဲ့သည့်ငွေ</span><span id="rcpPrice" class="font-display font-bold text-sm text-lime-400">0 Ks</span></div>
-      </div>
-      <button onclick="closeModal('receiptModal')" class="w-full py-2.5 rounded-xl btn-lime font-bold text-xs">ပိတ်မည်</button>
-    </div>
-  </div>
-
-  <!-- ========== OTHER MODALS ========== -->
-  <div id="hoursModal" onclick="handleBackdropClick(event, 'hoursModal')" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4">
-    <div class="w-full max-w-sm rounded-2xl bg-surface-900 border border-white/15 p-5 space-y-4 text-center animate-modal">
-      <h3 class="font-bold text-base text-white">ဆိုင်ဖွင့်ချိန်နှင့် သတိပေးချက်</h3>
-      <div class="text-xs text-gray-300 leading-relaxed text-left bg-surface-950 p-4 rounded-xl border border-white/10 space-y-2">
-        <p>⏰ <strong>အော်ဒါတင်နိုင်မည့်အချိန်:</strong><br/>နေ့စဉ် မနက် <span class="text-lime-400 font-bold">9:00 AM</span> မှ ည <span class="text-lime-400 font-bold">11:00 PM</span> အထိ။</p>
-        <p>⚠️ <strong>သတိပြုရန်:</strong><br/>ည 11:00 PM နောက်ပိုင်း တင်ထားသော အော်ဒါများကို နောက်နေ့မနက် 9:00 AM တွင် အစဉ်လိုက် အမြန်ဆုံး ဖြည့်သွင်းပေးပါမည်။</p>
-      </div>
-      <button onclick="closeModal('hoursModal')" class="w-full py-2.5 rounded-xl btn-lime font-bold text-xs">သိရှိပါသည်</button>
-    </div>
-  </div>
-
-  <div id="guideModal" onclick="handleBackdropClick(event, 'guideModal')" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4">
-    <div class="w-full max-w-md rounded-2xl bg-surface-900 border border-white/15 p-5 space-y-4 animate-modal">
-      <div class="flex items-center justify-between border-b border-white/10 pb-3">
-        <h3 class="font-bold text-sm text-white">ဝယ်ယူနည်း လမ်းညွှန်</h3>
-        <button onclick="closeModal('guideModal')" class="w-7 h-7 rounded-lg bg-surface-850 text-gray-400">✕</button>
-      </div>
-      <div class="space-y-2.5 text-xs text-gray-300 leading-relaxed">
-        <div class="p-3 rounded-xl bg-surface-950 border border-white/5"><strong class="text-lime-400 block mb-0.5">၁။ ဂိမ်း သို့မဟုတ် App ကိုရွေးပါ</strong>ဝယ်ယူလိုသော ဂိမ်း သို့မဟုတ် Digital App ကို တစ်ချက်နှိပ်ပါ။</div>
-        <div class="p-3 rounded-xl bg-surface-950 border border-white/5"><strong class="text-lime-400 block mb-0.5">၂။ ID ထည့်ပြီး ပက်ကေ့ချ်ရွေးပါ</strong>Player ID ထည့်ပြီး လိုချင်သော ပမာဏကို ရွေးချယ်ကာ ဝယ်ယူပါ။</div>
-        <div class="p-3 rounded-xl bg-surface-950 border border-white/5"><strong class="text-lime-400 block mb-0.5">၃။ KPay / WavePay ဖြင့် ငွေဖြည့်နည်း</strong>ငွေဖြည့်ရန် စာမျက်နှာမှ ဖုန်းနံပါတ်ကို Copy ကူး၍ ငွေလွှဲပြီး ပြေစာနောက်ဆုံး (၆) လုံးထည့်ပါ။</div>
-      </div>
-    </div>
-  </div>
-
-  <div id="supportModal" onclick="handleBackdropClick(event, 'supportModal')" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4">
-    <div class="w-full max-w-sm rounded-2xl bg-surface-900 border border-white/15 p-5 space-y-4 animate-modal">
-      <div class="flex items-center justify-between border-b border-white/10 pb-3">
-        <h3 class="font-bold text-sm text-white">Customer Care သို့ ဆက်သွယ်ရန်</h3>
-        <button onclick="closeModal('supportModal')" class="w-7 h-7 rounded-lg bg-surface-850 text-gray-400">✕</button>
-      </div>
-      <div class="space-y-2 text-xs font-semibold">
-        <button onclick="copyText('@LimeGameStore', 'Telegram Copy ကူးပြီးပါပြီ')" class="w-full p-3 rounded-xl bg-surface-950 hover:bg-surface-850 border border-white/10 text-gray-200 flex items-center justify-between transition"><span>Telegram</span><span class="text-lime-400">@LimeGameStore</span></button>
-        <button onclick="copyText('09798889900', 'Viber Copy ကူးပြီးပါပြီ')" class="w-full p-3 rounded-xl bg-surface-950 hover:bg-surface-850 border border-white/10 text-gray-200 flex items-center justify-between transition"><span>Viber Hotline</span><span class="text-lime-400">09-798889900</span></button>
-      </div>
-    </div>
-  </div>
-
-  <div id="authSheetModal" onclick="handleBackdropClick(event, 'authSheetModal')" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4">
-    <div class="w-full max-w-sm rounded-2xl bg-surface-900 border border-white/15 p-5 space-y-4 animate-modal">
-      <div class="flex items-center justify-between border-b border-white/10 pb-3">
-        <h3 class="font-bold text-sm text-white">အကောင့်အချက်အလက် ပြင်ဆင်ရန်</h3>
-        <button onclick="closeModal('authSheetModal')" class="w-7 h-7 rounded-lg bg-surface-850 text-gray-400">✕</button>
-      </div>
-      <form onsubmit="saveUserProfile(event)" class="space-y-3">
-        <div><label class="text-xs text-gray-400 block mb-1">အမည်</label><input id="loginNameField" type="text" required placeholder="ဥပမာ - Kyaw Swar" class="w-full px-3.5 py-2 rounded-xl bg-surface-950 border border-white/10 text-white text-xs focus:outline-none focus:border-lime-400" /></div>
-        <div><label class="text-xs text-gray-400 block mb-1">ဖုန်းနံပါတ်</label><input id="loginPhoneField" type="tel" required placeholder="09xxxxxxxxx" class="w-full px-3.5 py-2 rounded-xl bg-surface-950 border border-white/10 text-white text-xs focus:outline-none focus:border-lime-400" /></div>
-        <button type="submit" class="w-full py-2.5 rounded-xl btn-lime font-bold text-xs">သိမ်းဆည်းမည်</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- ========== TOAST ========== -->
-  <div id="toastNotification" class="fixed top-20 left-1/2 -translate-x-1/2 z-50 hidden px-4 py-2.5 rounded-xl bg-surface-900 border border-lime-400/50 text-white text-xs font-semibold shadow-xl flex items-center gap-2 max-w-[90vw]">
-    <span class="w-2 h-2 rounded-full bg-lime-400 shrink-0"></span><span id="toastMessage">Message</span>
-  </div>
-
-  <!-- ================= JAVASCRIPT ================= -->
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('brandLogo').src = STORE_LOGO_URL;
-      document.getElementById('profileLogo').src = STORE_LOGO_URL;
-      document.getElementById('sideMenuLogo').src = STORE_LOGO_URL;
-    });
-
-    const CATALOG_GAMES = [
-      { id: 'mlbb', title: 'မိုဘိုင်းလက်ကျဉ်', subTitle: 'Mobile Legends', logoUrl: 'https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/logo/01M4S16ZS5QEB9QYMXHK6F9PVH.jpg', tag: 'Instant', startPrice: '4,800 Ks မှစ၍', needsZone: true,
-        packages: [ { name: 'Weekly Diamond Pass', price: 6200, bonus: 'Hot' }, { name: '86 Diamonds', price: 4800, bonus: 'Instant' }, { name: '172 Diamonds', price: 9500, bonus: 'Instant' }, { name: '257 Diamonds', price: 14200, bonus: 'Popular' }, { name: '706 Diamonds', price: 38500, bonus: '+Bonus' }, { name: '2195 Diamonds', price: 115000, bonus: 'VIP' } ]
-      },
-      { id: 'pubg', title: 'ပီယူပီဂျီ', subTitle: 'PUBG Mobile Global', logoUrl: 'https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/logo/01M0J7643XAXNY7C2F95XY4PZQ.jpg', tag: 'Instant', startPrice: '3,900 Ks မှစ၍', needsZone: false,
-        packages: [ { name: '60 UC Global', price: 3900, bonus: 'Instant' }, { name: '325 UC Global', price: 19200, bonus: 'RP Pass' }, { name: '660 UC Global', price: 38000, bonus: 'Value' }, { name: '1800 UC Global', price: 94000, bonus: 'Pro' } ]
-      },
-      { id: 'roblox', title: 'Roblox', subTitle: 'Robux & Gift Card', logoUrl: 'https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/logo/01KT3KSPT9FXXCKM46RM0NNPGX.jpg', tag: 'Popular', startPrice: '4,200 Ks မှစ၍', needsZone: false,
-        packages: [ { name: '80 Robux', price: 4200, bonus: 'Fast' }, { name: '400 Robux', price: 18500, bonus: 'Popular' }, { name: '800 Robux', price: 36000, bonus: 'Value' }, { name: '1700 Robux', price: 74000, bonus: 'Mega' } ]
-      },
-      { id: 'gmirage_city', title: 'Granstar Mirage', subTitle: 'Mirage City Gems', logoUrl: 'https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/logo/01M0ZQVGRVA3PSBS2DKC79HZQH.jpg', tag: 'Auto', startPrice: '4,500 Ks မှစ၍', needsZone: false,
-        packages: [ { name: '100 Mirage Gems', price: 4500, bonus: 'Instant' }, { name: '520 Mirage Gems', price: 21000, bonus: 'Popular' }, { name: '1100 Mirage Gems', price: 41000, bonus: 'VIP' }, { name: 'Mirage City Pass', price: 15000, bonus: 'Monthly' } ]
-      },
-      { id: 'bls', title: 'Blood Strike', subTitle: 'Blood Strike Gold', logoUrl: 'https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/logo/01JZ3KV10C5EZ5BN4JMTFEYXKV.png', tag: 'Instant', startPrice: '3,600 Ks မှစ၍', needsZone: false,
-        packages: [ { name: '105 Gold', price: 3600, bonus: 'Instant' }, { name: '320 Gold', price: 10500, bonus: 'Pass' }, { name: '540 Gold', price: 17200, bonus: 'Popular' }, { name: '1100 Gold', price: 34000, bonus: 'Pro' } ]
-      },
-      { id: 'freefire', title: 'Free Fire', subTitle: 'Garena Diamonds', logoUrl: 'https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/logo/01KKJ5MA5Y07DC95ARZJ4RV1QQ.jpg', tag: 'Instant', startPrice: '3,800 Ks မှစ၍', needsZone: false,
-        packages: [ { name: '100 Diamonds', price: 3800, bonus: 'UID' }, { name: '310 Diamonds', price: 11200, bonus: 'Popular' }, { name: '520 Diamonds', price: 18500, bonus: 'Pass' }, { name: 'Weekly Membership', price: 6800, bonus: 'Hot' } ]
-      },
-      { id: 'eafcmobile_my', title: 'EAFC Mobile', subTitle: 'FC Points MY', logoUrl: 'https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/logo/01KKJ3X9MDEZHGBZRR3MXD4E1V.jpeg', tag: 'Official', startPrice: '2,500 Ks မှစ၍', needsZone: false,
-        packages: [ { name: '40 FC Points', price: 2500, bonus: 'Instant' }, { name: '100 FC Points', price: 5800, bonus: 'Popular' }, { name: '520 FC Points', price: 27500, bonus: 'Pass' }, { name: '1070 FC Points', price: 54000, bonus: 'Pro' } ]
-      },
-      { id: 'wwm', title: 'Where Winds Meet', subTitle: 'Jade Coins & Pass', logoUrl: 'https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/logo/01KCZB62MPZEC6M4BGZQE3V217.jpg', tag: 'New', startPrice: '16,500 Ks မှစ၍', needsZone: false,
-        packages: [ { name: 'Monthly Blessing Pass', price: 18500, bonus: '30 Days' }, { name: '300 Jade Coins', price: 16500, bonus: 'Instant' }, { name: '980 Jade Coins', price: 49000, bonus: 'Popular' }, { name: '1980 Jade Coins', price: 96000, bonus: 'Max' } ]
-      }
-    ];
-
-    const CATALOG_APPS = [
-      { id: 'tiktok', title: 'တီးတော့ (TikTok)', subTitle: 'Coins & Live Gift', logoUrl: 'https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/logo/01JZ3RW989ZE3EXHZVG7BVQJ8Z.png', tag: 'Hot', startPrice: '4,200 Ks မှစ၍', needsZone: false, inputLabel: 'TikTok Username (@...) သို့မဟုတ် Link',
-        packages: [ { name: '70 TikTok Coins', price: 4200, bonus: 'Fast' }, { name: '350 TikTok Coins', price: 20500, bonus: 'Fast' }, { name: '700 TikTok Coins', price: 40500, bonus: 'Popular' }, { name: '1400 TikTok Coins', price: 80000, bonus: 'VIP' } ]
-      },
-      { id: 'mochi', title: 'Mochi Chat', subTitle: 'Official Coins', logoUrl: 'https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/logo/01M03M0Z96DF4ETV5SBYMVMXEM.jpg', tag: 'Instant', startPrice: '5,000 Ks မှစ၍', needsZone: false, inputLabel: 'Mochi Chat ID',
-        packages: [ { name: '500 Mochi Coins', price: 5000, bonus: 'Instant' }, { name: '1200 Mochi Coins', price: 11500, bonus: 'Popular' }, { name: '3000 Mochi Coins', price: 28000, bonus: 'VIP' } ]
-      },
-      { id: 'telegram', title: 'Telegram', subTitle: 'Premium & Stars', logoUrl: 'https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/logo/01JZ3RJE7RGAM58RVVTY8GVBFW.jpg', tag: 'Official', startPrice: '19,500 Ks မှစ၍', needsZone: false, inputLabel: 'Telegram Username (@username)',
-        packages: [ { name: '250 Telegram Stars', price: 19500, bonus: 'Instant' }, { name: 'Premium 3 Months', price: 48000, bonus: 'Gift' }, { name: 'Premium 6 Months', price: 68000, bonus: 'Popular' }, { name: 'Premium 12 Months', price: 115000, bonus: 'Best Value' } ]
-      },
-      { id: 'facebook', title: 'Facebook', subTitle: 'Boost & Verified', logoUrl: 'https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/logo/01KESJKPVT7HAW9QDXTKWF65JE.jpg', tag: 'Business', startPrice: '22,500 Ks မှစ၍', needsZone: false, inputLabel: 'Facebook Page / Profile Link',
-        packages: [ { name: 'Page Boost ($5 Credit)', price: 22500, bonus: 'Reach' }, { name: 'Page Boost ($10 Credit)', price: 44000, bonus: 'Popular' }, { name: 'Blue Tick Setup', price: 55000, bonus: 'Support' } ]
-      },
-      { id: 'expressvpn', title: 'ExpressVPN', subTitle: 'High-Speed Key', logoUrl: 'https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/logo/01KT4P5EGGGFZAR679M7DC05ZH.jpg', tag: 'Warranty', startPrice: '8,500 Ks မှစ၍', needsZone: false, inputLabel: 'လက်ခံမည့် ဖုန်းနံပါတ် သို့မဟုတ် Telegram',
-        packages: [ { name: '1 Month (1 Device)', price: 8500, bonus: 'Warranty' }, { name: '1 Month (5 Devices)', price: 24000, bonus: 'Private' }, { name: '6 Months Private', price: 45000, bonus: 'Value' } ]
-      },
-      { id: 'jumpvpn', title: 'Jump Jump VPN', subTitle: 'Gaming Low Ping', logoUrl: 'https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/logo/01M3R9CNRBP7GSPK80A8XCZSPC.jpg', tag: 'Low Ping', startPrice: '5,500 Ks မှစ၍', needsZone: false, inputLabel: 'Jump Jump Account Email / ID',
-        packages: [ { name: '1 Month VIP Pass', price: 5500, bonus: 'Gaming' }, { name: '3 Months VIP Pass', price: 15000, bonus: 'Popular' }, { name: '1 Year VIP Pass', price: 48000, bonus: 'Save' } ]
-      },
-      { id: 'capcut', title: 'CapCut Pro', subTitle: 'Video Editor Pro', logoUrl: 'https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/logo/01KSR7ASA1HR1ZX63QF33YVK28.jpg', tag: 'Creator', startPrice: '6,500 Ks မှစ၍', needsZone: false, inputLabel: 'လက်ခံမည့် ဖုန်းနံပါတ် သို့မဟုတ် Email',
-        packages: [ { name: '1 Month (Shared)', price: 6500, bonus: 'Full FX' }, { name: '1 Month (Private)', price: 14500, bonus: 'Warranty' }, { name: '1 Year (Private)', price: 95000, bonus: 'Pro' } ]
-      },
-      { id: 'bigolive', title: 'Bigo Live', subTitle: 'Bigo Diamonds', logoUrl: 'https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/logo/01KM92JS3F02XZ650XYWJFNMPE.jpg', tag: 'Instant', startPrice: '4,500 Ks မှစ၍', needsZone: false, inputLabel: 'Bigo ID (ဥပမာ - 98234123)',
-        packages: [ { name: '42 Bigo Diamonds', price: 4500, bonus: 'Instant' }, { name: '210 Bigo Diamonds', price: 21500, bonus: 'Popular' }, { name: '840 Bigo Diamonds', price: 84000, bonus: 'VIP' } ]
-      }
-    ];
-
-    const ALL_ITEMS_MAP = new Map([...CATALOG_GAMES, ...CATALOG_APPS].map(item => [item.id, item]));
-
-    let state = {
-      balance: 25000,
-      userName: 'Lime Pro Gamer',
-      userPhone: '09-970001234',
-      categoryFilter: 'all',
-      selectedPayment: 'KBZPay',
-      activeItem: null,
-      activePkgIdx: 0,
-      savedIds: {},
-      showAllPackages: false,
-      orders: [
-        { id: 'LIME-98412', itemTitle: 'မိုဘိုင်းလက်ကျဉ် (MLBB)', pkgName: 'Weekly Diamond Pass', target: '492810442 (3219)', price: 6200, time: 'ယနေ့ 10:15 AM', logoUrl: 'https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/logo/01M4S16ZS5QEB9QYMXHK6F9PVH.jpg' }
-      ]
-    };
-
+// ================== LOGIN SYSTEM ==================
+async function loginAdmin() {
+    const phone = document.getElementById('admPhone').value.trim();
+    const password = document.getElementById('admPassword').value;
+    const btn = document.getElementById('loginBtn');
+    const errMsg = document.getElementById('loginErrorMsg');
+    
+    if(!phone || !password) return alert("ဖုန်းနံပါတ်နဲ့ Password ထည့်ပါ");
+    btn.disabled = true; btn.textContent = 'စစ်ဆေးနေသည်...';
+    errMsg.textContent = 'စီမံခန့်ခွဲသူသာ ဝင်ရောက်နိုင်သည်';
+    errMsg.classList.remove('text-rose-400', 'font-bold');
+    
     try {
-      const saved = localStorage.getItem('lime_bento_store_v5');
-      if (saved) state = { ...state, ...JSON.parse(saved) };
-    } catch (e) {}
-
-    function syncState() {
-      try { localStorage.setItem('lime_bento_store_v5', JSON.stringify(state)); } catch (e) {}
-      const balStr = state.balance.toLocaleString();
-      document.getElementById('topBalanceText').textContent = balStr;
-      document.getElementById('bentoBalanceText').textContent = balStr;
-      document.getElementById('walletViewBalance').textContent = balStr + ' Ks';
-      document.getElementById('modalWalletBalance').textContent = balStr + ' Ks';
-      document.getElementById('profileDisplayName').textContent = state.userName;
-      document.getElementById('profileDisplayPhone').textContent = state.userPhone;
-      document.getElementById('totalOrdersCount').textContent = state.orders.length + ' Orders';
-      renderOrdersFeed();
-    }
-
-    // SIDE MENU
-    function openSideMenu() {
-      document.getElementById('sideMenuOverlay').classList.remove('hidden');
-      setTimeout(() => document.getElementById('sideMenuOverlay').classList.remove('opacity-0'), 10);
-      document.getElementById('sideMenu').classList.remove('-translate-x-full');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeSideMenu() {
-      document.getElementById('sideMenu').classList.add('-translate-x-full');
-      document.getElementById('sideMenuOverlay').classList.add('opacity-0');
-      setTimeout(() => {
-        document.getElementById('sideMenuOverlay').classList.add('hidden');
-        document.body.style.overflow = '';
-      }, 300);
-    }
-
-    function updateOperatingStatus() {
-      const hour = new Date().getHours();
-      const isOpen = hour >= 9 && hour < 23;
-      const badge = document.getElementById('liveStatusBadge');
-      const dot = document.getElementById('liveStatusDot');
-      const text = document.getElementById('liveStatusText');
-      if (isOpen) {
-        badge.className = 'hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-semibold bg-lime-400/10 text-lime-300 border border-lime-400/20';
-        dot.className = 'w-1 h-1 rounded-full bg-lime-400';
-        text.textContent = 'OPEN';
-      } else {
-        badge.className = 'hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] font-semibold bg-amber-400/10 text-amber-300 border border-amber-400/20';
-        dot.className = 'w-1 h-1 rounded-full bg-amber-400';
-        text.textContent = 'QUEUE';
-      }
-    }
-
-    function createBentoCardHTML(item) {
-      return `
-        <div onclick="openCheckoutModal('${item.id}')" class="bento-card cursor-pointer rounded-2xl p-3.5 flex flex-col justify-between gap-3 group">
-          <div class="flex items-start justify-between gap-2">
-            <div class="w-12 h-12 sm:w-14 sm:h-14 apk-icon-wrap shrink-0 border border-white/10">
-              <img src="${item.logoUrl}" alt="${item.title}" loading="lazy" decoding="async" class="w-full h-full object-cover group-hover:scale-105 transition duration-200" onerror="this.src='https://placehold.co/120x120/141d11/a3e635?text=' + encodeURIComponent('${item.title.slice(0,4)}')" />
-            </div>
-            <span class="px-2 py-0.5 rounded-md text-[10px] font-medium bg-white/5 text-gray-300 whitespace-nowrap">${item.tag}</span>
-          </div>
-          <div>
-            <h3 class="font-bold text-xs sm:text-sm text-white truncate group-hover:text-lime-400 transition">${item.title}</h3>
-            <p class="text-[11px] text-gray-400 truncate mt-0.5">${item.startPrice}</p>
-          </div>
-        </div>
-      `;
-    }
-
-    function renderCatalogGrids(searchQuery = '') {
-      const q = searchQuery.trim().toLowerCase();
-      const match = item => !q || item.title.toLowerCase().includes(q) || item.subTitle.toLowerCase().includes(q) || item.id.includes(q);
-      const filteredGames = CATALOG_GAMES.filter(match);
-      const filteredApps = CATALOG_APPS.filter(match);
-      document.getElementById('gamesBentoGrid').innerHTML = filteredGames.length ? filteredGames.map(createBentoCardHTML).join('') : `<div class="col-span-full p-6 rounded-xl bg-surface-900 text-center text-xs text-gray-400">ရှာဖွေထားသော ဂိမ်း မတွေ့ပါ။</div>`;
-      document.getElementById('appsBentoGrid').innerHTML = filteredApps.length ? filteredApps.map(createBentoCardHTML).join('') : `<div class="col-span-full p-6 rounded-xl bg-surface-900 text-center text-xs text-gray-400">ရှာဖွေထားသော App မတွေ့ပါ။</div>`;
-      document.getElementById('section-games').classList.toggle('hidden', state.categoryFilter === 'apps');
-      document.getElementById('section-apps').classList.toggle('hidden', state.categoryFilter === 'games');
-    }
-
-    let searchTimer = null;
-    function debouncedSearch() {
-      const val = document.getElementById('searchInput').value;
-      document.getElementById('clearSearchBtn').classList.toggle('hidden', !val);
-      clearTimeout(searchTimer);
-      searchTimer = setTimeout(() => renderCatalogGrids(val), 100);
-    }
-
-    function clearSearch() {
-      document.getElementById('searchInput').value = '';
-      document.getElementById('clearSearchBtn').classList.add('hidden');
-      renderCatalogGrids('');
-    }
-
-    function setCategoryFilter(cat) {
-      state.categoryFilter = cat;
-      ['all', 'games', 'apps'].forEach(c => {
-        const btn = document.getElementById('cat-' + c);
-        btn.className = c === cat ? 'shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold btn-lime transition' : 'shrink-0 px-3.5 py-2 rounded-xl text-xs font-medium bg-surface-900 text-gray-300 hover:text-white border border-white/10 transition';
-      });
-      renderCatalogGrids(document.getElementById('searchInput').value);
-    }
-
-    function openModal(id) {
-      const m = document.getElementById(id);
-      if (!m) return;
-      m.classList.remove('hidden'); m.classList.add('flex');
-      document.body.style.overflow = 'hidden';
-    }
-
-    function closeModal(id) {
-      const m = document.getElementById(id);
-      if (!m) return;
-      m.classList.add('hidden'); m.classList.remove('flex');
-      document.body.style.overflow = '';
-    }
-
-    function handleBackdropClick(e, id) {
-      if (e.target.id === id) closeModal(id);
-    }
-
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        ['checkoutModal', 'receiptModal', 'hoursModal', 'guideModal', 'supportModal', 'authSheetModal'].forEach(closeModal);
-        closeSideMenu();
-      }
-    });
-
-    // CHECKOUT LOGIC (Show More)
-    function openCheckoutModal(itemId) {
-      const item = ALL_ITEMS_MAP.get(itemId);
-      if (!item) return;
-      state.activeItem = item;
-      state.activePkgIdx = 0;
-      state.showAllPackages = false;
-
-      document.getElementById('checkoutLogoImg').src = item.logoUrl;
-      document.getElementById('checkoutTitle').textContent = item.title;
-      document.getElementById('checkoutSubtitle').textContent = item.subTitle;
-      document.getElementById('verifiedPlayerBox').classList.add('hidden');
-
-      const saved = state.savedIds[item.id] || { pid: '', zid: '' };
-      const fieldsBox = document.getElementById('checkoutDynamicFields');
-
-      if (item.needsZone) {
-        fieldsBox.innerHTML = `
-          <div class="grid grid-cols-3 gap-2">
-            <div class="col-span-2"><input id="inputPlayerId" type="text" value="${saved.pid}" required placeholder="Player ID (ဥပမာ 12345678)" class="w-full px-3 py-2 rounded-lg bg-surface-900 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-lime-400" /></div>
-            <div><input id="inputZoneId" type="text" value="${saved.zid}" required placeholder="Zone ID" class="w-full px-3 py-2 rounded-lg bg-surface-900 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-lime-400" /></div>
-          </div>
-        `;
-      } else {
-        const lbl = item.inputLabel || 'Player ID / Username ရိုက်ထည့်ပါ';
-        fieldsBox.innerHTML = `<input id="inputPlayerId" type="text" value="${saved.pid}" required placeholder="${lbl}" class="w-full px-3 py-2 rounded-lg bg-surface-900 border border-white/10 text-white text-xs sm:text-sm focus:outline-none focus:border-lime-400" />`;
-      }
-
-      renderCheckoutPackages();
-      openModal('checkoutModal');
-    }
-
-    function verifyPlayerID() {
-      const idEl = document.getElementById('inputPlayerId');
-      if (!idEl || !idEl.value.trim()) {
-        showToast('Player ID အရင်ရိုက်ထည့်ပေးပါ'); if (idEl) idEl.focus(); return;
-      }
-      const sampleNames = ['LIME_Legend99', 'Yangon_Slayer', 'ProGamer_MM', 'Ace_Sniper', 'KingOfMyanmar'];
-      const picked = sampleNames[idEl.value.trim().length % sampleNames.length];
-      document.getElementById('verifiedPlayerName').textContent = picked;
-      document.getElementById('verifiedPlayerBox').classList.remove('hidden');
-    }
-
-    function renderCheckoutPackages() {
-      const item = state.activeItem;
-      const grid = document.getElementById('checkoutPackagesGrid');
-      
-      let displayPkgs = state.showAllPackages ? item.packages : item.packages.slice(0, 4);
-
-      let html = displayPkgs.map((pkg, i) => {
-        const actualIdx = item.packages.indexOf(pkg);
-        const active = actualIdx === state.activePkgIdx;
-        return `
-          <button type="button" onclick="selectCheckoutPackage(${actualIdx})" class="p-3 rounded-xl text-left border transition flex flex-col justify-between ${active ? 'bg-lime-400/10 border-lime-400' : 'bg-surface-950 border-white/10 hover:border-white/20'}">
-            <div class="flex items-center justify-between gap-1 mb-1">
-              <span class="text-[10px] font-medium ${active ? 'text-lime-400' : 'text-gray-400'}">${pkg.bonus}</span>
-              ${active ? '<span class="text-lime-400 text-xs font-bold">✓</span>' : ''}
-            </div>
-            <div class="text-xs font-bold text-white leading-snug">${pkg.name}</div>
-            <div class="font-display font-bold text-xs text-lime-400 mt-1">${pkg.price.toLocaleString()} Ks</div>
-          </button>
-        `;
-      }).join('');
-
-      if (!state.showAllPackages && item.packages.length > 4) {
-        html += `
-          <button type="button" onclick="toggleShowAllPackages()" class="col-span-2 py-2.5 rounded-xl bg-surface-850 border border-white/10 text-xs font-bold text-lime-400 hover:bg-surface-800 transition flex items-center justify-center gap-1.5 mt-1">
-            နောက်ထပ် ${item.packages.length - 4} ခု ကြည့်ရန် 
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
-          </button>
-        `;
-      }
-
-      grid.innerHTML = html;
-
-      const currentPkg = item.packages[state.activePkgIdx];
-      document.getElementById('checkoutTotalPrice').textContent = currentPkg.price.toLocaleString() + ' Ks';
-    }
-
-    function toggleShowAllPackages() {
-      state.showAllPackages = true;
-      renderCheckoutPackages();
-    }
-
-    function selectCheckoutPackage(idx) {
-      state.activePkgIdx = idx;
-      renderCheckoutPackages();
-    }
-
-    function submitQuickOrder(e) {
-      e.preventDefault();
-      const item = state.activeItem;
-      const pkg = item.packages[state.activePkgIdx];
-      const pid = document.getElementById('inputPlayerId').value.trim();
-      const zidEl = document.getElementById('inputZoneId');
-      const zid = zidEl ? zidEl.value.trim() : '';
-      const fullTarget = zid ? `${pid} (${zid})` : pid;
-
-      state.savedIds[item.id] = { pid, zid };
-
-      if (state.balance < pkg.price) {
-        closeModal('checkoutModal');
-        showToast('လက်ကျန်ငွေ မလုံလောက်ပါ။ ငွေဖြည့်ပေးပါ။');
-        switchMainTab('wallet');
-        return;
-      }
-
-      const nowStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-      const newOrder = {
-        id: 'LIME-' + Math.floor(10000 + Math.random() * 90000),
-        itemTitle: item.title, pkgName: pkg.name, target: fullTarget,
-        price: pkg.price, time: `ယနေ့ ${nowStr}`, logoUrl: item.logoUrl
-      };
-
-      state.balance -= pkg.price;
-      state.orders.unshift(newOrder);
-      syncState();
-      closeModal('checkoutModal');
-      showReceiptModal(newOrder);
-    }
-
-    function showReceiptModal(order) {
-      document.getElementById('rcpOrderId').textContent = order.id;
-      document.getElementById('rcpItemTitle').textContent = order.itemTitle;
-      document.getElementById('rcpPkgName').textContent = order.pkgName;
-      document.getElementById('rcpTarget').textContent = order.target;
-      document.getElementById('rcpTime').textContent = order.time;
-      document.getElementById('rcpPrice').textContent = order.price.toLocaleString() + ' Ks';
-      openModal('receiptModal');
-    }
-
-    function renderOrdersFeed() {
-      const container = document.getElementById('ordersFeedContainer');
-      if (!state.orders.length) {
-        container.innerHTML = `<div class="p-8 text-center rounded-2xl bg-surface-900 border border-white/10 text-xs text-gray-400">အော်ဒါမှတ်တမ်း မရှိသေးပါ။</div>`;
-        return;
-      }
-      container.innerHTML = state.orders.map((o, idx) => `
-        <div onclick="showReceiptModal(state.orders[${idx}])" class="cursor-pointer p-3.5 rounded-2xl bg-surface-900 hover:bg-surface-850 border border-white/10 flex items-center justify-between gap-3 transition">
-          <div class="flex items-center gap-3 min-w-0">
-            <img src="${o.logoUrl}" alt="" class="w-11 h-11 rounded-xl object-cover shrink-0 border border-white/10" onerror="this.src='https://placehold.co/80x80/141d11/a3e635?text=LIME'" />
-            <div class="min-w-0">
-              <div class="flex items-center gap-2"><span class="font-display font-bold text-[10px] text-lime-400">${o.id}</span><span class="text-[10px] text-gray-500">• ${o.time}</span></div>
-              <div class="font-bold text-xs sm:text-sm text-white truncate">${o.itemTitle} — ${o.pkgName}</div>
-              <div class="text-[11px] text-gray-400 truncate">ID: ${o.target}</div>
-            </div>
-          </div>
-          <div class="text-right shrink-0"><div class="font-display font-bold text-xs sm:text-sm text-lime-400">${o.price.toLocaleString()} Ks</div><span class="text-[10px] text-gray-400">ပြေစာကြည့်ရန် ›</span></div>
-        </div>
-      `).join('');
-    }
-
-    function selectPayChannel(name, phone, holder) {
-      state.selectedPayment = name;
-      document.getElementById('payChannelLabel').textContent = name;
-      document.getElementById('payPhoneNumber').textContent = phone;
-      document.getElementById('payHolderName').textContent = 'Name: ' + holder;
-      document.querySelectorAll('.pay-channel-btn').forEach(btn => {
-        btn.className = btn.textContent.includes(name) ? 'pay-channel-btn p-3 rounded-xl bg-surface-850 border-2 border-lime-400 text-left transition' : 'pay-channel-btn p-3 rounded-xl bg-surface-850 border border-white/10 text-left transition';
-      });
-    }
-
-    function copyText(text, message) {
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => showToast(message));
-      } else {
-        const input = document.createElement('input'); input.value = text; document.body.appendChild(input); input.select(); document.execCommand('copy'); document.body.removeChild(input); showToast(message);
-      }
-    }
-
-    function copyReceiverPhone() {
-      const phone = document.getElementById('payPhoneNumber').textContent;
-      copyText(phone, `${phone} ကို Copy ကူးပြီးပါပြီ`);
-    }
-
-    function fillTopupAmount(amt) {
-      document.getElementById('topupAmountField').value = amt;
-      document.getElementById('topupDigitsField').focus();
-    }
-
-    function handleWalletTopUp(e) {
-      e.preventDefault();
-      const amt = parseInt(document.getElementById('topupAmountField').value, 10);
-      const digits = document.getElementById('topupDigitsField').value.trim();
-      if (!amt || amt < 1000) return;
-      state.balance += amt;
-      state.orders.unshift({ id: 'TOP-' + digits, itemTitle: `Wallet Top-Up (${state.selectedPayment})`, pkgName: `+${amt.toLocaleString()} Ks`, target: `ပြေစာ #${digits}`, price: amt, time: 'ယခုလေးတင်', logoUrl: 'https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/logo/01M4S16ZS5QEB9QYMXHK6F9PVH.jpg' });
-      syncState();
-      e.target.reset();
-      showToast(`ငွေ ${amt.toLocaleString()} Ks ဖြည့်သွင်းပြီးပါပြီ`);
-      switchMainTab('store');
-    }
-
-    function switchMainTab(tab) {
-      ['store', 'wallet', 'orders', 'profile'].forEach(t => {
-        const sec = document.getElementById('tab-' + t);
-        if (sec) sec.classList.toggle('hidden', t !== tab);
-        const dockBtn = document.getElementById('dock-' + t);
-        if (dockBtn && t !== 'wallet') {
-          dockBtn.className = t === tab ? 'dock-btn flex-1 py-1.5 rounded-xl flex flex-col items-center gap-1 text-lime-400 bg-white/5 font-semibold transition' : 'dock-btn flex-1 py-1.5 rounded-xl flex flex-col items-center gap-1 text-gray-400 hover:text-white font-medium transition';
+        const email = phone + '@lime.local';
+        const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        
+        // Role စစ်ဆေးခြင်း
+        const { data: u } = await _supabase.from('users').select('*').eq('id', data.user.id).single();
+        if (!u || u.role !== 'admin') {
+            await _supabase.auth.signOut();
+            throw new Error('ဒီအကောင့်က Admin မဟုတ်ပါဘူး။ (SQL မှာ UPDATE လုပ်ပြီးပြီလား?)');
         }
-      });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // အောင်မြင်ရင် ချက်ချင်းဝင်မယ်
+        ADM_STATE.me = u;
+        document.getElementById('adminLoginScreen').classList.replace('flex', 'hidden');
+        document.getElementById('adminSidebar').classList.replace('hidden', 'flex');
+        document.getElementById('adminMain').classList.remove('hidden');
+        loadAdminData();
+        
+    } catch (e) {
+        errMsg.textContent = '❌ ' + e.message;
+        errMsg.classList.add('text-rose-400', 'font-bold');
     }
+    btn.disabled = false; btn.textContent = 'Login';
+}
 
-    function saveUserProfile(e) {
-      e.preventDefault();
-      state.userName = document.getElementById('loginNameField').value.trim();
-      state.userPhone = document.getElementById('loginPhoneField').value.trim();
-      syncState(); closeModal('authSheetModal'); showToast('သိမ်းဆည်းပြီးပါပြီ');
+async function doLogout() {
+    await _supabase.auth.signOut();
+    location.reload();
+}
+
+// ================== LOAD DATA ==================
+async function loadAdminData() {
+    if (!ADM_STATE.me) return;
+    
+    try {
+        const [usr, top, ord, prod] = await Promise.all([
+            _supabase.from('users').select('*').order('created_at', { ascending: false }),
+            _supabase.from('topup_requests').select('*').eq('status', 'pending').order('created_at', { ascending: false }),
+            _supabase.from('orders').select('*').order('created_at', { ascending: false }),
+            _supabase.from('products').select('id', { count: 'exact' })
+        ]);
+
+        if(usr.error) throw usr.error;
+        if(top.error) throw top.error;
+        if(ord.error) throw ord.error;
+
+        ADM_STATE.users = usr.data || [];
+        ADM_STATE.topups = top.data || [];
+        ADM_STATE.orders = ord.data || [];
+        ADM_STATE.totalProducts = prod.count || 0;
+
+        renderAll();
+    } catch(e) {
+        notify('❌ ဒေတာဆွဲယူရာတွင် အမှားရှိနေသည်: ' + e.message);
     }
+}
 
-    function resetDemoStore() {
-      localStorage.removeItem('lime_bento_store_v5'); location.reload();
+function renderAll() {
+    document.getElementById('kpiPendingTopups').textContent = ADM_STATE.topups.length;
+    document.getElementById('kpiPendingOrders').textContent = ADM_STATE.orders.filter(o => o.status === 'pending').length;
+    document.getElementById('kpiTotalUsers').textContent = ADM_STATE.users.length;
+    document.getElementById('kpiTotalItems').textContent = ADM_STATE.totalProducts;
+    
+    document.getElementById('navBadgeTopups').textContent = ADM_STATE.topups.length;
+    document.getElementById('navBadgeTopups').style.display = ADM_STATE.topups.length > 0 ? 'block' : 'none';
+    document.getElementById('navBadgeOrders').textContent = ADM_STATE.orders.filter(o => o.status === 'pending').length;
+
+    document.getElementById('admTopupList').innerHTML = ADM_STATE.topups.map(r => {
+        const user = ADM_STATE.users.find(u => u.id === r.user_id) || { name: 'Unknown', phone: '—' };
+        return `
+        <div class="p-3.5 rounded-2xl bg-surface-950 border border-amber-400/30 flex flex-col sm:flex-row justify-between gap-3 text-xs">
+            <div>
+                <div class="font-bold text-amber-300 mb-1">${r.code} • ${new Date(r.created_at).toLocaleTimeString()}</div>
+                <div class="text-white font-bold">${user.name} (${user.phone})</div>
+                <div class="text-gray-400">ငွေလွှဲ: <strong class="text-lime-300">${Number(r.amount).toLocaleString()} Ks</strong></div>
+                <div class="text-gray-400">ပြေစာ: <strong class="text-white font-display text-sm tracking-widest">${r.receipt_last6}</strong></div>
+            </div>
+            <div class="flex gap-2 items-center">
+                <button onclick="approveTopup('${r.id}', '${r.user_id}', ${r.amount})" class="px-3 py-2 rounded-xl bg-lime-400 text-surface-950 font-bold">✓ Approve</button>
+                <button onclick="rejectTopup('${r.id}')" class="px-3 py-2 rounded-xl bg-rose-500/20 text-rose-300 font-bold border border-rose-400/30">✕ Reject</button>
+            </div>
+        </div>`;
+    }).join('') || '<div class="text-center py-4 text-gray-500">မရှိပါ</div>';
+
+    document.getElementById('admOrdersList').innerHTML = ADM_STATE.orders.map(o => `
+        <div class="p-3.5 rounded-2xl bg-surface-950 border ${o.status === 'pending' ? 'border-amber-400/40' : 'border-white/10'} flex flex-col sm:flex-row justify-between gap-3 text-xs">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="font-display font-bold text-lime-400">${o.code}</span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${o.status === 'pending' ? 'bg-amber-400/20 text-amber-300' : 'bg-lime-400/15 text-lime-300'}">${o.status.toUpperCase()}</span>
+                </div>
+                <div class="font-bold text-white">${o.product_title} — <span class="text-lime-300">${o.package_name}</span></div>
+                <div class="text-gray-400 mt-1">ID: <strong class="text-white">${o.target_account} ${o.target_zone ? '('+o.target_zone+')' : ''}</strong> | ဈေးနှုန်း: <strong class="text-lime-300">${Number(o.price_paid).toLocaleString()} Ks</strong></div>
+            </div>
+            <div class="flex gap-1.5 items-center">
+                ${o.status === 'pending' ? `<button onclick="updateOrder('${o.id}', 'completed')" class="px-3 py-1.5 rounded-xl bg-lime-400 text-surface-950 font-bold">✓ Complete</button>` : ''}
+                ${o.status === 'pending' ? `<button onclick="updateOrder('${o.id}', 'rejected')" class="px-3 py-1.5 rounded-xl bg-rose-500/20 text-rose-300 font-bold border border-rose-400/30">✕ Reject</button>` : ''}
+            </div>
+        </div>
+    `).join('') || '<div class="text-center py-4 text-gray-500">မရှိပါ</div>';
+
+    renderUsers();
+}
+
+function renderUsers() {
+    const q = (document.getElementById('userSearchInput')?.value || '').toLowerCase().trim();
+    const users = ADM_STATE.users.filter(u => !q || u.name.toLowerCase().includes(q) || u.phone.includes(q));
+    
+    document.getElementById('admUserList').innerHTML = users.map(u => `
+        <div class="p-3.5 rounded-2xl bg-surface-950 border border-white/10 flex flex-col sm:flex-row justify-between gap-3 text-xs">
+            <div>
+                <div class="font-bold text-white text-sm">${u.name} <span class="px-1.5 py-0.5 rounded text-[10px] ${u.role==='admin'?'bg-amber-400 text-black':'bg-surface-800 text-gray-300'}">${u.role.toUpperCase()}</span></div>
+                <div class="text-gray-400 mt-1">${u.phone} • လက်ကျန်: <strong class="text-lime-400">${Number(u.balance).toLocaleString()} Ks</strong> • 🎟️ ${u.spin_tickets}</div>
+            </div>
+            <div class="flex gap-2 items-center">
+                <button onclick="openAdjustBalance('${u.id}', '${u.name}', ${u.balance})" class="px-3 py-1.5 rounded-xl bg-lime-400/15 text-lime-300 border border-lime-400/30 font-bold">💰 ငွေပြင်</button>
+            </div>
+        </div>
+    `).join('') || '<div class="text-center py-4 text-gray-500">မရှိပါ</div>';
+}
+
+async function approveTopup(reqId, userId, amount) {
+    if (!confirm('အတည်ပြုမှာ သေချာလား?')) return;
+    try {
+        await _supabase.from('topup_requests').update({ status: 'approved', verified_by: ADM_STATE.me.id, verified_at: new Date() }).eq('id', reqId);
+        const { data: u } = await _supabase.from('users').select('balance').eq('id', userId).single();
+        const newBal = Number(u.balance) + Number(amount);
+        await _supabase.from('users').update({ balance: newBal }).eq('id', userId);
+        await _supabase.from('transactions').insert({
+            user_id: userId, type: 'topup', amount: amount, balance_before: u.balance, balance_after: newBal, description: 'ငွေဖြည့်အတည်ပြု'
+        });
+        notify('✅ ငွေဖြည့် အတည်ပြုပြီးပါပြီ');
+        loadAdminData();
+    } catch (e) { notify('❌ ' + e.message); }
+}
+
+async function rejectTopup(reqId) {
+    if (!confirm('ပယ်ချမှာ သေချာလား?')) return;
+    try {
+        await _supabase.from('topup_requests').update({ status: 'rejected', verified_by: ADM_STATE.me.id, verified_at: new Date() }).eq('id', reqId);
+        notify('❌ ပယ်ချပြီးပါပြီ'); loadAdminData();
+    } catch (e) { notify('❌ ' + e.message); }
+}
+
+async function updateOrder(orderId, status) {
+    try {
+        await _supabase.from('orders').update({ status: status, processed_by: ADM_STATE.me.id, processed_at: new Date() }).eq('id', orderId);
+        notify('📦 အော်ဒါ အခြေအနေ ပြောင်းလဲပြီးပါပြီ'); loadAdminData();
+    } catch (e) { notify('❌ ' + e.message); }
+}
+
+function openAdjustBalance(id, name, bal) {
+    selectedUserIdForAdjust = id;
+    document.getElementById('adjUserName').value = `${name} (လက်ရှိ: ${Number(bal).toLocaleString()} Ks)`;
+    document.getElementById('adjBalanceDelta').value = '';
+    document.getElementById('adjustBalanceModal').classList.replace('hidden', 'flex');
+}
+
+async function executeBalanceAdjust() {
+    const delta = Number(document.getElementById('adjBalanceDelta').value);
+    const reason = document.getElementById('adjBalanceReason').value || 'Admin Adjust';
+    if (!delta) return notify('⚠️ ငွေပမာဏ ထည့်ပါ');
+    
+    try {
+        const { data: u } = await _supabase.from('users').select('balance').eq('id', selectedUserIdForAdjust).single();
+        const newBal = Number(u.balance) + delta;
+        if (newBal < 0) return notify('⚠️ လက်ကျန်ငွေ အနုတ်ဖြစ်သွားပါမည်');
+        await _supabase.from('users').update({ balance: newBal }).eq('id', selectedUserIdForAdjust);
+        await _supabase.from('transactions').insert({
+            user_id: selectedUserIdForAdjust, type: 'admin_adjust', amount: delta, balance_before: u.balance, balance_after: newBal, description: reason
+        });
+        document.getElementById('adjustBalanceModal').classList.replace('flex', 'hidden');
+        notify('💰 လက်ကျန်ငွေ ပြင်ဆင်ပြီးပါပြီ'); loadAdminData();
+    } catch (e) { notify('❌ ' + e.message); }
+}
+
+// ================== INIT ==================
+window.addEventListener('DOMContentLoaded', async () => {
+    document.getElementById('adminLoginScreen').classList.replace('hidden', 'flex');
+    
+    // Session ရှိပြီးသားလား အရင်စစ်မယ်
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (session) {
+        const { data: u } = await _supabase.from('users').select('*').eq('id', session.user.id).single();
+        if (u && u.role === 'admin') {
+            ADM_STATE.me = u;
+            document.getElementById('adminLoginScreen').classList.replace('flex', 'hidden');
+            document.getElementById('adminSidebar').classList.replace('hidden', 'flex');
+            document.getElementById('adminMain').classList.remove('hidden');
+            loadAdminData();
+            return;
+        }
     }
-
-    let currentHeroIdx = 0;
-    function changeHeroSlide(idx) {
-      currentHeroIdx = idx;
-      const slides = document.querySelectorAll('.hero-slide');
-      const dots = document.querySelectorAll('.hero-dot');
-      slides.forEach((s, i) => {
-        s.classList.toggle('opacity-100', i === idx); s.classList.toggle('opacity-0', i !== idx); s.classList.toggle('pointer-events-none', i !== idx);
-      });
-      dots.forEach((d, i) => {
-        d.className = i === idx ? 'hero-dot w-5 h-1.5 rounded-full bg-lime-400 transition-all' : 'hero-dot w-1.5 h-1.5 rounded-full bg-white/40 transition-all';
-      });
-    }
-
-    const LIVE_TICKER_MESSAGES = [
-      'ဆိုင်ဖွင့်ချိန် (9:00 AM – 11:00 PM) • ၁ မိနစ်အတွင်း အော်တိုဖြည့်သွင်းပေးနေပါသည်',
-      'Ko Aung မှ MLBB Weekly Diamond Pass ဝယ်ယူသွားပါသည် (Just now)',
-      'May Thu မှ TikTok 700 Coins ဝယ်ယူသွားပါသည် (1 min ago)',
-      'Kyaw Zin မှ PUBG 325 UC Global ဝယ်ယူသွားပါသည် (2 mins ago)'
-    ];
-    let tickerIdx = 0;
-    function rotateTicker() {
-      if (document.hidden) return;
-      const el = document.getElementById('liveTickerText');
-      if (!el) return;
-      el.style.opacity = '0';
-      setTimeout(() => {
-        tickerIdx = (tickerIdx + 1) % LIVE_TICKER_MESSAGES.length;
-        el.textContent = LIVE_TICKER_MESSAGES[tickerIdx];
-        el.style.opacity = '1';
-      }, 250);
-    }
-
-    let toastTimeout = null;
-    function showToast(msg) {
-      const box = document.getElementById('toastNotification');
-      document.getElementById('toastMessage').textContent = msg;
-      box.classList.remove('hidden'); box.classList.add('animate-fade');
-      clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => { box.classList.add('hidden'); box.classList.remove('animate-fade'); }, 2800);
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      updateOperatingStatus(); renderCatalogGrids(); syncState();
-      setInterval(() => { if (!document.hidden) changeHeroSlide((currentHeroIdx + 1) % 3); }, 5000);
-      setInterval(rotateTicker, 4500);
-    });
-  </script>
+    // မဝင်ထားရင် ဘာမှမလုပ်ဘဲ Login Screen ပဲပြနေမယ်
+});
+</script>
 </body>
 </html>
