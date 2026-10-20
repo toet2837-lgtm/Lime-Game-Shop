@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="my" class="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>LIME ADMIN PANEL — Store Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Orbitron:wght@700;800;900&family=Padauk:wght@400;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+tailwind.config={darkMode:'class',theme:{extend:{colors:{lime:{300:'#bef264',400:'#a3e635',500:'#84cc16',600:'#65a30d'},surface:{950:'#060905',900:'#0c120a',800:'#131c10',700:'#1b2717'}},fontFamily:{sans:['"Inter"','"Padauk"','sans-serif'],display:['"Orbitron"','sans-serif']}}}};
+</script>
+<style>
+*{box-sizing:border-box}
+body{background-color:#060905;background-image:radial-gradient(at 10% 10%,rgba(132,204,22,.12) 0,transparent 45%);color:#f3f4f6;font-family:'Inter','Padauk',sans-serif;margin:0}
+.glass-card{background:rgba(16,24,13,.94);border:1px solid rgba(163,230,53,.18);box-shadow:0 10px 30px -10px rgba(0,0,0,.5)}
+.nav-btn.active{background:#a3e635;color:#060905;font-weight:800;box-shadow:0 4px 15px rgba(163,230,53,.25)}
+input,select,textarea{background:#060905;border:1px solid rgba(255,255,255,.15);color:#fff;transition:all .2s ease}
+input:focus,select:focus{outline:none;border-color:#a3e635;box-shadow:0 0 0 2px rgba(163,230,53,.2)}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#060905}
+::-webkit-scrollbar-thumb{background:#1b2717;border-radius:99px}
+</style>
+</head>
+<body class="min-h-screen flex flex-col lg:flex-row">
+
+<!-- ADMIN LOGIN SCREEN (အသစ်ထည့်ထားသည်) -->
+<div id="adminLoginScreen" class="fixed inset-0 z-[100] hidden items-center justify-center bg-[#060905] p-4">
+  <div class="w-full max-w-sm rounded-3xl bg-surface-900 border border-lime-400/40 p-6 space-y-4 shadow-2xl">
+    <div class="text-center">
+      <div class="w-16 h-16 rounded-2xl bg-lime-400 text-surface-950 font-display font-black flex items-center justify-center text-xl mx-auto mb-3 shadow-lg">LIME</div>
+      <h2 class="text-lg font-bold text-white">Admin Login</h2>
+      <p class="text-xs text-gray-400 mt-1" id="loginErrorMsg">စီမံခန့်ခွဲသူသာ ဝင်ရောက်နိုင်သည်</p>
+    </div>
+    <div class="space-y-3 pt-2">
+      <input id="admPhone" type="tel" placeholder="ဖုန်းနံပါတ်" class="w-full px-3.5 py-3 rounded-xl bg-surface-950 border border-white/15 text-white text-sm"/>
+      <input id="admPassword" type="password" placeholder="Password" class="w-full px-3.5 py-3 rounded-xl bg-surface-950 border border-white/15 text-white text-sm"/>
+    </div>
+    <button onclick="loginAdmin()" id="loginBtn" class="w-full py-3.5 rounded-xl bg-lime-400 text-surface-950 font-bold text-sm shadow-lg">Login</button>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside id="adminSidebar" class="hidden w-full lg:w-64 bg-surface-900 border-b lg:border-b-0 lg:border-r border-lime-400/20 p-4 flex-col justify-between shrink-0 lg:sticky lg:top-0 lg:h-screen">
+<div class="space-y-5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-lime-400 text-surface-950 font-display font-black flex items-center justify-center text-sm shadow-lg shadow-lime-400/20">LIME</div>
+<div><h1 class="font-display font-black text-sm text-white tracking-wide">LIME <span class="text-lime-400">ADMIN</span></h1><span class="text-[10px] text-lime-300 flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-lime-400 animate-pulse"></span> Supabase Live</span></div>
+</div>
+</div>
+<nav class="flex lg:flex-col gap-1.5 overflow-x-auto pb-1 lg:pb-0">
+<button onclick="switchAdminTab('dashboard')" id="nav-dashboard" class="nav-btn active shrink-0 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-left flex items-center gap-2 transition">📊 Dashboard</button>
+<button onclick="switchAdminTab('topups')" id="nav-topups" class="nav-btn shrink-0 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:bg-white/5 text-left flex items-center justify-between gap-2 transition"><span>💳 ငွေဖြည့်အတည်ပြုရန်</span><span id="navBadgeTopups" class="px-1.5 py-0.5 rounded-md bg-rose-500 text-white text-[10px] font-bold">0</span></button>
+<button onclick="switchAdminTab('orders')" id="nav-orders" class="nav-btn shrink-0 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-gray-300 hover:bg-white/5 text-left flex items-center justify-between gap-2 transition"><span>📦 အော်ဒါများ</span><span id="navBadgeOrders" class="px-1.5 py-0.5 rounded-md bg-lime-400/20 text-lime-300 text-[10px] font-bold">0</span></button>
+<button onclick="switchAdminTab('users')" id="nav-users" class="nav-btn shrink-0 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-amber-300 hover:bg-white/5 text-left flex items-center gap-2 transition">👥 User များ</button>
+</nav>
+</div>
+<div class="hidden lg:block space-y-2 pt-4 border-t border-white/10">
+<button onclick="doLogout()" class="w-full py-2 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 font-semibold text-[11px] border border-rose-400/30">🚪 Logout</button>
+</div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main id="adminMain" class="hidden flex-1 p-4 sm:p-6 overflow-y-auto space-y-6 max-w-6xl mx-auto w-full">
+
+<section id="sec-dashboard" class="space-y-5">
+<div class="flex flex-col sm:flex-row justify-between gap-2 bg-surface-900/90 p-4 rounded-2xl border border-white/10">
+<div><h2 class="font-display font-bold text-lg text-white">📊 ဆိုင်အချက်အလက် ခြုံငုံကြည့်ရန်</h2><p class="text-xs text-gray-400">Supabase Database (Real-time)</p></div>
+<button onclick="loadAdminData()" class="px-3 py-1.5 rounded-lg bg-lime-400/20 text-lime-300 text-xs font-bold self-start">🔄 Refresh</button>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+<div class="glass-card rounded-2xl p-4 cursor-pointer" onclick="switchAdminTab('topups')"><span class="text-[11px] text-gray-400">စောင့်ဆိုင်းနေသော ငွေဖြည့်</span><div id="kpiPendingTopups" class="font-display font-black text-xl text-amber-400 mt-1">0</div></div>
+<div class="glass-card rounded-2xl p-4 cursor-pointer" onclick="switchAdminTab('orders')"><span class="text-[11px] text-gray-400">စောင့်ဆိုင်းနေသော အော်ဒါ</span><div id="kpiPendingOrders" class="font-display font-black text-xl text-lime-400 mt-1">0</div></div>
+<div class="glass-card rounded-2xl p-4"><span class="text-[11px] text-gray-400">User စုစုပေါင်း</span><div id="kpiTotalUsers" class="font-display font-black text-xl text-white mt-1">0</div></div>
+<div class="glass-card rounded-2xl p-4"><span class="text-[11px] text-gray-400">ပစ္စည်း စုစုပေါင်း</span><div id="kpiTotalItems" class="font-display font-black text-xl text-emerald-400 mt-1">0</div></div>
+</div>
+</section>
+
+<section id="sec-topups" class="hidden space-y-5">
+<div class="bg-surface-900/90 p-4 rounded-2xl border border-white/10"><h2 class="font-display font-bold text-lg text-white">💳 ငွေဖြည့်တောင်းဆိုမှုများ အတည်ပြုရန်</h2></div>
+<div class="glass-card rounded-3xl p-4"><div id="admTopupList" class="space-y-2.5 max-h-[600px] overflow-y-auto"></div></div>
+</section>
+
+<section id="sec-orders" class="hidden space-y-5">
+<div class="flex flex-col sm:flex-row justify-between gap-3 bg-surface-900/90 p-4 rounded-2xl border border-white/10"><div><h2 class="font-display font-bold text-lg text-white">📦 အော်ဒါများ စီမံခန့်ခွဲမှု</h2></div></div>
+<div class="glass-card rounded-3xl p-4"><div id="admOrdersList" class="space-y-2.5 max-h-[600px] overflow-y-auto"></div></div>
+</section>
+
+<section id="sec-users" class="hidden space-y-5">
+<div class="flex flex-col sm:flex-row justify-between gap-3 bg-surface-900/90 p-4 rounded-2xl border border-white/10">
+<div><h2 class="font-display font-bold text-lg text-white">👥 User အကောင့်များ</h2></div>
+<input id="userSearchInput" oninput="renderUsers()" type="text" placeholder="🔍 ရှာရန်..." class="px-4 py-2.5 rounded-xl text-xs w-full sm:w-64 bg-surface-950 border border-white/10 text-white"/>
+</div>
+<div class="glass-card rounded-3xl p-4"><div id="admUserList" class="space-y-2.5 max-h-[600px] overflow-y-auto"></div></div>
+</section>
+
+</main>
+
+<div id="adjustBalanceModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-md p-4">
+<div class="w-full max-w-md rounded-3xl bg-surface-900 border border-lime-400/40 p-5 space-y-4 text-xs">
+<div class="flex justify-between border-b border-white/10 pb-2.5"><h3 class="font-bold text-sm text-lime-400">💰 User Balance ပြင်ဆင်ရန်</h3><button onclick="document.getElementById('adjustBalanceModal').classList.replace('flex','hidden')" class="text-gray-400">✕</button></div>
+<div><label class="text-gray-400 block mb-1">User</label><input id="adjUserName" type="text" class="w-full px-3 py-2 rounded-xl bg-surface-800 font-bold text-white" readonly/></div>
+<div><label class="text-gray-400 block mb-1">ပမာဏ (+/-)</label><input id="adjBalanceDelta" type="number" placeholder="ဥပမာ - 10000" class="w-full px-3 py-2 rounded-xl font-display font-bold text-lime-300"/></div>
+<div><label class="text-gray-400 block mb-1">အကြောင်းအရာ</label><input id="adjBalanceReason" type="text" value="Admin Bonus" class="w-full px-3 py-2 rounded-xl"/></div>
+<button onclick="executeBalanceAdjust()" class="w-full py-3 rounded-xl bg-lime-400 text-surface-950 font-extrabold shadow mt-2">အတည်ပြုမည်</button>
+</div>
+</div>
+
+<div id="admToast" class="fixed bottom-5 right-5 z-[60] hidden px-4 py-3 rounded-2xl bg-surface-900 border-2 border-lime-400 text-white text-xs font-bold shadow-2xl"></div>
+
+<script>
+const SUPABASE_URL = 'https://zbxlqwbqdgdycaxwkhged.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpieGxxd2JxZGd5Y2F4d2toZ2VkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1MjM3ODUsImV4cCI6MjEwODA5OTc4NX0.Qkriuh5TpbflpzK-LDmtH2XX1lLNu5w-qiVpxCgfCro';
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let ADM_STATE = { me: null, users: [], topups: [], orders: [], totalProducts: 0 };
+let selectedUserIdForAdjust = null;
+
+function notify(msg) { const box = document.getElementById('admToast'); box.textContent = msg; box.classList.remove('hidden'); setTimeout(() => box.classList.add('hidden'), 3000); }
+function switchAdminTab(tab) { ['dashboard', 'topups', 'orders', 'users'].forEach(t => { document.getElementById('sec-' + t).classList.toggle('hidden', t !== tab); document.getElementById('nav-' + t).classList.toggle('active', t === tab); }); }
+
+// ================== LOGIN SYSTEM ==================
+async function loginAdmin() {
+    const phone = document.getElementById('admPhone').value.trim();
+    const password = document.getElementById('admPassword').value;
+    const btn = document.getElementById('loginBtn');
+    const errMsg = document.getElementById('loginErrorMsg');
+    
+    if(!phone || !password) return alert("ဖုန်းနံပါတ်နဲ့ Password ထည့်ပါ");
+    btn.disabled = true; btn.textContent = 'စစ်ဆေးနေသည်...';
+    errMsg.textContent = 'စီမံခန့်ခွဲသူသာ ဝင်ရောက်နိုင်သည်';
+    errMsg.classList.remove('text-rose-400', 'font-bold');
+    
+    try {
+        const email = phone + '@lime.local';
+        const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+        if (error) throw error;
+        
+        // Role စစ်ဆေးခြင်း
+        const { data: u } = await _supabase.from('users').select('*').eq('id', data.user.id).single();
+        if (!u || u.role !== 'admin') {
+            await _supabase.auth.signOut();
+            throw new Error('ဒီအကောင့်က Admin မဟုတ်ပါဘူး။ (SQL မှာ UPDATE လုပ်ပြီးပြီလား?)');
+        }
+        
+        // အောင်မြင်ရင် ချက်ချင်းဝင်မယ်
+        ADM_STATE.me = u;
+        document.getElementById('adminLoginScreen').classList.replace('flex', 'hidden');
+        document.getElementById('adminSidebar').classList.replace('hidden', 'flex');
+        document.getElementById('adminMain').classList.remove('hidden');
+        loadAdminData();
+        
+    } catch (e) {
+        errMsg.textContent = '❌ ' + e.message;
+        errMsg.classList.add('text-rose-400', 'font-bold');
+    }
+    btn.disabled = false; btn.textContent = 'Login';
+}
+
+async function doLogout() {
+    await _supabase.auth.signOut();
+    location.reload();
+}
+
+// ================== LOAD DATA ==================
+async function loadAdminData() {
+    if (!ADM_STATE.me) return;
+    
+    try {
+        const [usr, top, ord, prod] = await Promise.all([
+            _supabase.from('users').select('*').order('created_at', { ascending: false }),
+            _supabase.from('topup_requests').select('*').eq('status', 'pending').order('created_at', { ascending: false }),
+            _supabase.from('orders').select('*').order('created_at', { ascending: false }),
+            _supabase.from('products').select('id', { count: 'exact' })
+        ]);
+
+        if(usr.error) throw usr.error;
+        if(top.error) throw top.error;
+        if(ord.error) throw ord.error;
+
+        ADM_STATE.users = usr.data || [];
+        ADM_STATE.topups = top.data || [];
+        ADM_STATE.orders = ord.data || [];
+        ADM_STATE.totalProducts = prod.count || 0;
+
+        renderAll();
+    } catch(e) {
+        notify('❌ ဒေတာဆွဲယူရာတွင် အမှားရှိနေသည်: ' + e.message);
+    }
+}
+
+function renderAll() {
+    document.getElementById('kpiPendingTopups').textContent = ADM_STATE.topups.length;
+    document.getElementById('kpiPendingOrders').textContent = ADM_STATE.orders.filter(o => o.status === 'pending').length;
+    document.getElementById('kpiTotalUsers').textContent = ADM_STATE.users.length;
+    document.getElementById('kpiTotalItems').textContent = ADM_STATE.totalProducts;
+    
+    document.getElementById('navBadgeTopups').textContent = ADM_STATE.topups.length;
+    document.getElementById('navBadgeTopups').style.display = ADM_STATE.topups.length > 0 ? 'block' : 'none';
+    document.getElementById('navBadgeOrders').textContent = ADM_STATE.orders.filter(o => o.status === 'pending').length;
+
+    document.getElementById('admTopupList').innerHTML = ADM_STATE.topups.map(r => {
+        const user = ADM_STATE.users.find(u => u.id === r.user_id) || { name: 'Unknown', phone: '—' };
+        return `
+        <div class="p-3.5 rounded-2xl bg-surface-950 border border-amber-400/30 flex flex-col sm:flex-row justify-between gap-3 text-xs">
+            <div>
+                <div class="font-bold text-amber-300 mb-1">${r.code} • ${new Date(r.created_at).toLocaleTimeString()}</div>
+                <div class="text-white font-bold">${user.name} (${user.phone})</div>
+                <div class="text-gray-400">ငွေလွှဲ: <strong class="text-lime-300">${Number(r.amount).toLocaleString()} Ks</strong></div>
+                <div class="text-gray-400">ပြေစာ: <strong class="text-white font-display text-sm tracking-widest">${r.receipt_last6}</strong></div>
+            </div>
+            <div class="flex gap-2 items-center">
+                <button onclick="approveTopup('${r.id}', '${r.user_id}', ${r.amount})" class="px-3 py-2 rounded-xl bg-lime-400 text-surface-950 font-bold">✓ Approve</button>
+                <button onclick="rejectTopup('${r.id}')" class="px-3 py-2 rounded-xl bg-rose-500/20 text-rose-300 font-bold border border-rose-400/30">✕ Reject</button>
+            </div>
+        </div>`;
+    }).join('') || '<div class="text-center py-4 text-gray-500">မရှိပါ</div>';
+
+    document.getElementById('admOrdersList').innerHTML = ADM_STATE.orders.map(o => `
+        <div class="p-3.5 rounded-2xl bg-surface-950 border ${o.status === 'pending' ? 'border-amber-400/40' : 'border-white/10'} flex flex-col sm:flex-row justify-between gap-3 text-xs">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span class="font-display font-bold text-lime-400">${o.code}</span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${o.status === 'pending' ? 'bg-amber-400/20 text-amber-300' : 'bg-lime-400/15 text-lime-300'}">${o.status.toUpperCase()}</span>
+                </div>
+                <div class="font-bold text-white">${o.product_title} — <span class="text-lime-300">${o.package_name}</span></div>
+                <div class="text-gray-400 mt-1">ID: <strong class="text-white">${o.target_account} ${o.target_zone ? '('+o.target_zone+')' : ''}</strong> | ဈေးနှုန်း: <strong class="text-lime-300">${Number(o.price_paid).toLocaleString()} Ks</strong></div>
+            </div>
+            <div class="flex gap-1.5 items-center">
+                ${o.status === 'pending' ? `<button onclick="updateOrder('${o.id}', 'completed')" class="px-3 py-1.5 rounded-xl bg-lime-400 text-surface-950 font-bold">✓ Complete</button>` : ''}
+                ${o.status === 'pending' ? `<button onclick="updateOrder('${o.id}', 'rejected')" class="px-3 py-1.5 rounded-xl bg-rose-500/20 text-rose-300 font-bold border border-rose-400/30">✕ Reject</button>` : ''}
+            </div>
+        </div>
+    `).join('') || '<div class="text-center py-4 text-gray-500">မရှိပါ</div>';
+
+    renderUsers();
+}
+
+function renderUsers() {
+    const q = (document.getElementById('userSearchInput')?.value || '').toLowerCase().trim();
+    const users = ADM_STATE.users.filter(u => !q || u.name.toLowerCase().includes(q) || u.phone.includes(q));
+    
+    document.getElementById('admUserList').innerHTML = users.map(u => `
+        <div class="p-3.5 rounded-2xl bg-surface-950 border border-white/10 flex flex-col sm:flex-row justify-between gap-3 text-xs">
+            <div>
+                <div class="font-bold text-white text-sm">${u.name} <span class="px-1.5 py-0.5 rounded text-[10px] ${u.role==='admin'?'bg-amber-400 text-black':'bg-surface-800 text-gray-300'}">${u.role.toUpperCase()}</span></div>
+                <div class="text-gray-400 mt-1">${u.phone} • လက်ကျန်: <strong class="text-lime-400">${Number(u.balance).toLocaleString()} Ks</strong> • 🎟️ ${u.spin_tickets}</div>
+            </div>
+            <div class="flex gap-2 items-center">
+                <button onclick="openAdjustBalance('${u.id}', '${u.name}', ${u.balance})" class="px-3 py-1.5 rounded-xl bg-lime-400/15 text-lime-300 border border-lime-400/30 font-bold">💰 ငွေပြင်</button>
+            </div>
+        </div>
+    `).join('') || '<div class="text-center py-4 text-gray-500">မရှိပါ</div>';
+}
+
+async function approveTopup(reqId, userId, amount) {
+    if (!confirm('အတည်ပြုမှာ သေချာလား?')) return;
+    try {
+        await _supabase.from('topup_requests').update({ status: 'approved', verified_by: ADM_STATE.me.id, verified_at: new Date() }).eq('id', reqId);
+        const { data: u } = await _supabase.from('users').select('balance').eq('id', userId).single();
+        const newBal = Number(u.balance) + Number(amount);
+        await _supabase.from('users').update({ balance: newBal }).eq('id', userId);
+        await _supabase.from('transactions').insert({
+            user_id: userId, type: 'topup', amount: amount, balance_before: u.balance, balance_after: newBal, description: 'ငွေဖြည့်အတည်ပြု'
+        });
+        notify('✅ ငွေဖြည့် အတည်ပြုပြီးပါပြီ');
+        loadAdminData();
+    } catch (e) { notify('❌ ' + e.message); }
+}
+
+async function rejectTopup(reqId) {
+    if (!confirm('ပယ်ချမှာ သေချာလား?')) return;
+    try {
+        await _supabase.from('topup_requests').update({ status: 'rejected', verified_by: ADM_STATE.me.id, verified_at: new Date() }).eq('id', reqId);
+        notify('❌ ပယ်ချပြီးပါပြီ'); loadAdminData();
+    } catch (e) { notify('❌ ' + e.message); }
+}
+
+async function updateOrder(orderId, status) {
+    try {
+        await _supabase.from('orders').update({ status: status, processed_by: ADM_STATE.me.id, processed_at: new Date() }).eq('id', orderId);
+        notify('📦 အော်ဒါ အခြေအနေ ပြောင်းလဲပြီးပါပြီ'); loadAdminData();
+    } catch (e) { notify('❌ ' + e.message); }
+}
+
+function openAdjustBalance(id, name, bal) {
+    selectedUserIdForAdjust = id;
+    document.getElementById('adjUserName').value = `${name} (လက်ရှိ: ${Number(bal).toLocaleString()} Ks)`;
+    document.getElementById('adjBalanceDelta').value = '';
+    document.getElementById('adjustBalanceModal').classList.replace('hidden', 'flex');
+}
+
+async function executeBalanceAdjust() {
+    const delta = Number(document.getElementById('adjBalanceDelta').value);
+    const reason = document.getElementById('adjBalanceReason').value || 'Admin Adjust';
+    if (!delta) return notify('⚠️ ငွေပမာဏ ထည့်ပါ');
+    
+    try {
+        const { data: u } = await _supabase.from('users').select('balance').eq('id', selectedUserIdForAdjust).single();
+        const newBal = Number(u.balance) + delta;
+        if (newBal < 0) return notify('⚠️ လက်ကျန်ငွေ အနုတ်ဖြစ်သွားပါမည်');
+        await _supabase.from('users').update({ balance: newBal }).eq('id', selectedUserIdForAdjust);
+        await _supabase.from('transactions').insert({
+            user_id: selectedUserIdForAdjust, type: 'admin_adjust', amount: delta, balance_before: u.balance, balance_after: newBal, description: reason
+        });
+        document.getElementById('adjustBalanceModal').classList.replace('flex', 'hidden');
+        notify('💰 လက်ကျန်ငွေ ပြင်ဆင်ပြီးပါပြီ'); loadAdminData();
+    } catch (e) { notify('❌ ' + e.message); }
+}
+
+// ================== INIT ==================
+window.addEventListener('DOMContentLoaded', async () => {
+    document.getElementById('adminLoginScreen').classList.replace('hidden', 'flex');
+    
+    // Session ရှိပြီးသားလား အရင်စစ်မယ်
+    const { data: { session } } = await _supabase.auth.getSession();
+    if (session) {
+        const { data: u } = await _supabase.from('users').select('*').eq('id', session.user.id).single();
+        if (u && u.role === 'admin') {
+            ADM_STATE.me = u;
+            document.getElementById('adminLoginScreen').classList.replace('flex', 'hidden');
+            document.getElementById('adminSidebar').classList.replace('hidden', 'flex');
+            document.getElementById('adminMain').classList.remove('hidden');
+            loadAdminData();
+            return;
+        }
+    }
+    // မဝင်ထားရင် ဘာမှမလုပ်ဘဲ Login Screen ပဲပြနေမယ်
+});
+</script>
+</body>
+</html>
