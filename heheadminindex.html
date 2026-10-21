@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="my" class="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>LIME GAME STORE — Official Instant Top-Up & Digital Hub</title>
+<meta name="theme-color" content="#060905"/>
+<meta name="description" content="⏰ အော်ဒါတင်နိုင်မည့်အချိန်: မနက် 9:00 AM မှ ည 11:00 PM အထိ။"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Orbitron:wght@700;800;900&family=Padauk:wght@400;700&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+tailwind.config={darkMode:'class',theme:{extend:{colors:{lime:{300:'#bef264',400:'#a3e635',500:'#84cc16',600:'#65a30d'},surface:{950:'#060905',900:'#0c120a',800:'#131c10',700:'#1b2717'}},fontFamily:{sans:['"Inter"','"Padauk"','sans-serif'],display:['"Orbitron"','sans-serif']}}}};
+</script>
+<style>
+*{-webkit-tap-highlight-color:transparent;box-sizing:border-box}
+body{background-color:#060905;background-image:radial-gradient(at 15% 10%,rgba(132,204,22,.13) 0,transparent 45%),radial-gradient(at 85% 25%,rgba(16,185,129,.08) 0,transparent 50%);background-attachment:fixed;color:#f3f4f6;font-family:'Inter','Padauk',sans-serif;margin:0;overflow-x:hidden}
+.no-scrollbar::-webkit-scrollbar{display:none}.no-scrollbar{-ms-overflow-style:none;scrollbar-width:none}
+.glass-panel{background:rgba(12,18,10,.86);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(163,230,53,.15)}
+.glass-dock{background:rgba(9,14,7,.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid rgba(163,230,53,.2);box-shadow:0 -10px 30px rgba(0,0,0,.85)}
+.bento-card{background:linear-gradient(165deg,rgba(22,33,18,.92) 0,rgba(11,17,9,.96) 100%);border:1px solid rgba(255,255,255,.08);transition:transform .2s ease,border-color .2s ease}
+.bento-card:hover{transform:translateY(-2px);border-color:rgba(163,230,53,.5)}.bento-card:active{transform:scale(.97)}
+.menu-pill-btn{background:rgba(20,29,17,.92);border:1px solid rgba(255,255,255,.08);transition:all .18s ease}
+.menu-pill-btn:hover,.menu-pill-btn:active{background:rgba(32,46,27,.95);border-color:rgba(163,230,53,.45)}
+.apk-icon-wrap{border-radius:18px;overflow:hidden;box-shadow:0 5px 14px rgba(0,0,0,.5);background:#131c10}
+.center-wallet-orb{background:radial-gradient(circle at 30% 30%,#bef264,#84cc16 60%,#4d7c0f 100%);box-shadow:0 0 22px rgba(163,230,53,.55),0 4px 12px rgba(0,0,0,.6)}
+.spin-bg-grid{background-image:linear-gradient(rgba(132,204,22,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(132,204,22,.05) 1px,transparent 1px);background-size:26px 26px}
+.wheel-outer-rim{background:linear-gradient(145deg,#a3e635 0,#4d7c0f 50%,#365314 100%);box-shadow:0 0 45px rgba(132,204,22,.28),inset 0 0 18px rgba(0,0,0,.65)}
+.wheel-inner-plate{background:radial-gradient(circle,#fff 0,#f3f4f6 68%,#d1d5db 100%);box-shadow:inset 0 6px 22px rgba(0,0,0,.35);transition:transform 4.2s cubic-bezier(.14,.88,.22,1)}
+.wheel-center-knob{background:radial-gradient(circle at 35% 35%,#fef08a 0,#a3e635 45%,#4d7c0f 90%);box-shadow:0 6px 18px rgba(0,0,0,.5),inset 0 2px 6px rgba(255,255,255,.8)}
+.wheel-stand-neck{clip-path:polygon(22% 0%,78% 0%,96% 100%,4% 100%);background:linear-gradient(180deg,#365314 0,#65a30d 55%,#4d7c0f 100%)}
+.wheel-stand-base{background:linear-gradient(90deg,#365314 0,#a3e635 50%,#365314 100%);box-shadow:0 10px 25px rgba(0,0,0,.8)}
+.spin-start-btn{background:linear-gradient(180deg,#65a30d 0,#365314 100%);border:1px solid rgba(190,242,100,.4);box-shadow:0 8px 25px rgba(101,163,13,.4),inset 0 1px 2px rgba(255,255,255,.3)}
+.spin-start-btn:hover:not(:disabled){background:linear-gradient(180deg,#84cc16 0,#4d7c0f 100%);transform:translateY(-1px)}
+.spin-start-btn:disabled{opacity:.6;cursor:not-allowed}
+.voucher-notch{position:relative}
+.voucher-notch::before,.voucher-notch::after{content:'';position:absolute;width:20px;height:20px;background:#060905;border-radius:50%;bottom:-10px}
+.voucher-notch::before{left:-10px}.voucher-notch::after{right:-10px}
+</style>
+</head>
+<body class="min-h-screen pb-24">
+
+<svg width="0" height="0" class="hidden"><defs>
+<linearGradient id="limeBrandGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#e2ff44"/><stop offset="50%" stop-color="#84cc16"/><stop offset="100%" stop-color="#3f6212"/></linearGradient>
+<linearGradient id="limeBright" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#d9f99d"/><stop offset="45%" stop-color="#84cc16"/><stop offset="100%" stop-color="#4d7c0f"/></linearGradient>
+<symbol id="lime-store-logo" viewBox="0 0 140 140">
+<circle cx="70" cy="70" r="64" fill="#060c03"/><circle cx="70" cy="70" r="60" fill="none" stroke="url(#limeBrandGrad)" stroke-width="4.5"/><circle cx="70" cy="70" r="53" fill="none" stroke="#a3e635" stroke-width="1.5" stroke-dasharray="28 10 12 10" opacity=".8"/>
+<path d="M26 68 C26 36, 114 36, 114 68" fill="none" stroke="url(#limeBrandGrad)" stroke-width="5" stroke-linecap="round"/><rect x="14" y="54" width="10" height="28" rx="5" fill="url(#limeBright)"/><rect x="116" y="54" width="10" height="28" rx="5" fill="url(#limeBright)"/>
+<path d="M51 44 C51 28, 68 21, 76 19 C74 32, 64 43, 51 44 Z" fill="url(#limeBright)"/>
+<text x="70" y="75" text-anchor="middle" font-family="Orbitron, sans-serif" font-weight="900" font-style="italic" font-size="33" fill="url(#limeBright)" stroke="#060c03" stroke-width="1.5">LIME</text>
+<rect x="20" y="82" width="100" height="19" rx="6" fill="#091105" stroke="#84cc16" stroke-width="1.5"/><text x="70" y="95" text-anchor="middle" font-family="Orbitron, sans-serif" font-weight="800" font-size="10.2" fill="#fff" letter-spacing="1.6">GAME STORE</text>
+</symbol>
+</defs></svg>
+
+<header class="sticky top-0 z-30 glass-panel">
+<div class="max-w-5xl mx-auto px-4 py-2.5 flex items-center justify-between gap-2">
+<button onclick="switchMainTab('store')" class="flex items-center gap-3 text-left focus:outline-none group">
+<div class="w-11 h-11 rounded-2xl bg-white p-0.5 shadow-md flex items-center justify-center overflow-hidden shrink-0 group-hover:scale-105 transition"><svg class="w-10 h-10"><use href="#lime-store-logo"></use></svg></div>
+<div><span class="font-display font-black text-base sm:text-lg tracking-wide text-white block leading-tight" id="headerStoreName">Lime <span class="text-lime-400">Store</span></span><span class="text-[10px] font-bold tracking-widest text-gray-400 uppercase flex items-center gap-1"><span id="headerSyncDot" class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>OFFICIAL STORE</span></div>
+</button>
+<div class="flex items-center gap-2">
+<div onclick="switchMainTab('wallet')" class="cursor-pointer flex items-center gap-2 bg-surface-900 hover:bg-surface-800 border border-lime-400/30 rounded-2xl pl-3 pr-1.5 py-1 transition">
+<div><div class="text-[9px] text-gray-400 leading-none">လက်ကျန်ငွေ</div><div class="font-display font-bold text-xs text-white mt-0.5"><span id="topBalanceText">—</span> <span class="text-lime-400">Ks</span></div></div>
+<span class="w-6 h-6 rounded-xl bg-lime-400 text-surface-950 font-bold flex items-center justify-center text-xs">+</span>
+</div>
+<button onclick="openInfoModal('notice')" aria-label="noti" class="w-10 h-10 rounded-full bg-surface-800 hover:bg-surface-700 border border-white/10 flex items-center justify-center text-gray-300 hover:text-lime-400 transition relative shrink-0">
+<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+<span class="w-2 h-2 rounded-full bg-lime-400 absolute top-2 right-2.5 animate-ping"></span>
+</button>
+<button onclick="toggleQuickMenu(true)" aria-label="menu" class="w-10 h-10 rounded-full bg-surface-800 hover:bg-surface-700 border border-white/10 flex items-center justify-center text-gray-200 hover:text-lime-400 transition shrink-0">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+</button>
+</div>
+</div>
+</header>
+
+<div id="quickMenuModal" class="fixed inset-0 z-50 hidden items-start justify-center bg-black/85 backdrop-blur-md p-3 sm:p-6 overflow-y-auto">
+<div class="w-full max-w-md rounded-[28px] bg-[#0b1009] border border-lime-400/25 shadow-2xl p-5 space-y-5 mt-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3.5"><div class="w-12 h-12 rounded-2xl bg-white p-0.5 shadow-md flex items-center justify-center shrink-0"><svg class="w-11 h-11"><use href="#lime-store-logo"></use></svg></div>
+<div><h3 class="font-display font-extrabold text-lg text-white leading-tight">Lime Game Store</h3><span class="text-xs font-bold tracking-widest text-gray-400 uppercase">MENU</span></div></div>
+<button onclick="toggleQuickMenu(false)" class="w-10 h-10 rounded-full bg-surface-800 hover:bg-surface-700 border border-white/10 text-gray-300 flex items-center justify-center text-base">✕</button>
+</div>
+<div class="grid grid-cols-2 gap-3 pt-1">
+<button onclick="toggleQuickMenu(false); switchMainTab('store');" class="menu-pill-btn py-3.5 px-3 rounded-2xl flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-white"><span class="text-lime-400">🏠</span><span>Home</span></button>
+<button onclick="toggleQuickMenu(false); switchMainTab('wallet');" class="menu-pill-btn py-3.5 px-3 rounded-2xl flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-white"><span class="text-lime-400">💳</span><span>ငွေသွင်းရန်</span></button>
+<button onclick="toggleQuickMenu(false); openInfoModal('notice');" class="menu-pill-btn py-3.5 px-3 rounded-2xl flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-white"><span class="text-lime-400">✉️</span><span>အသိပေးချက်များ</span></button>
+<button onclick="toggleQuickMenu(false); openInfoModal('support');" class="menu-pill-btn py-3.5 px-3 rounded-2xl flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-white"><span class="text-lime-400">💬</span><span>Admin ဆက်သွယ်ရန်</span></button>
+<button onclick="toggleQuickMenu(false); switchMainTab('spin');" class="menu-pill-btn py-3.5 px-3 rounded-2xl flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-white border-lime-400/30"><span class="text-lime-400">🎯</span><span>ကံစမ်းရန်</span></button>
+<button onclick="toggleQuickMenu(false); openInfoModal('guide');" class="menu-pill-btn py-3.5 px-3 rounded-2xl flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-white"><span class="text-lime-400">📖</span><span>အသုံးပြုနည်း</span></button>
+<button onclick="toggleQuickMenu(false); switchMainTab('profile');" class="menu-pill-btn py-3.5 px-3 rounded-2xl flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-white"><span class="text-lime-400">👤</span><span>Account</span></button>
+<button onclick="toggleQuickMenu(false); doLogout();" class="menu-pill-btn py-3.5 px-3 rounded-2xl flex items-center justify-center gap-2 text-xs sm:text-sm font-semibold text-rose-300"><span>🚪</span><span>Logout</span></button>
+</div>
+</div>
+</div>
+
+<main class="max-w-5xl mx-auto px-4 pt-3">
+
+<section id="tab-store" class="space-y-5">
+<div id="hoursBanner" class="rounded-2xl bg-gradient-to-r from-lime-500/15 via-emerald-500/10 to-surface-800 border border-lime-400/30 p-3 flex items-center justify-between gap-2">
+<div class="flex items-center gap-2.5 text-xs min-w-0">
+  <span class="w-8 h-8 rounded-xl bg-lime-400/20 border border-lime-400/40 flex items-center justify-center shrink-0">⏰</span>
+  <div class="min-w-0">
+    <span class="font-bold text-lime-300 block truncate" id="storeHoursText">ဆိုင်ဖွင့်ချိန် (9:00 AM – 11:00 PM)</span>
+    <span class="text-[11px] text-gray-300 block truncate mt-0.5" id="storeAnnouncementBanner">⚡ အော်ဒါများအားလုံး ၁ မိနစ်မှ ၅ မိနစ်အတွင်း အမြန်ဆုံး ဆောင်ရွက်ပေးနေပါသည်။</span>
+  </div>
+</div>
+<button onclick="switchMainTab('spin')" class="px-3 py-1.5 rounded-xl bg-lime-400 text-surface-950 font-extrabold text-[11px] shrink-0 shadow">🎯 ကံစမ်းရန်</button>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+<div class="lg:col-span-2 relative rounded-3xl overflow-hidden border border-white/10 bg-surface-900 shadow-xl h-44 sm:h-52"><div id="heroSlides"></div><div class="absolute top-3 right-3.5 flex gap-1.5 z-10" id="heroDots"></div></div>
+<div class="rounded-3xl p-4 sm:p-5 bg-gradient-to-br from-surface-800 via-surface-900 to-surface-950 border border-lime-400/25 flex flex-col justify-between gap-3 shadow-xl">
+<div class="flex items-center justify-between">
+<div><span class="text-[10px] font-bold uppercase tracking-wider text-lime-400">My Wallet</span><h3 class="text-xl font-display font-black text-white mt-0.5"><span id="bentoBalanceText">—</span> Ks</h3></div>
+<button onclick="switchMainTab('spin')" class="px-3 py-1.5 rounded-full bg-amber-400/15 hover:bg-amber-400/25 border border-amber-400/40 text-amber-300 text-xs font-bold flex items-center gap-1 transition">🎡 Spin (<span id="bentoTicketCount">0</span>)</button>
+</div>
+<div class="grid grid-cols-3 gap-2 text-center">
+<button onclick="switchMainTab('wallet')" class="p-2.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-surface-950 font-bold text-xs flex flex-col items-center gap-1 shadow"><span>➕</span><span>ငွေဖြည့်</span></button>
+<button onclick="openInfoModal('topbuyers')" class="p-2.5 rounded-2xl bg-surface-700/80 hover:bg-surface-700 border border-white/10 text-gray-200 font-semibold text-xs flex flex-col items-center gap-1"><span>🏆</span><span>Top</span></button>
+<button onclick="toggleQuickMenu(true)" class="p-2.5 rounded-2xl bg-surface-700/80 hover:bg-surface-700 border border-white/10 text-gray-200 font-semibold text-xs flex flex-col items-center gap-1"><span>☰</span><span>Menu</span></button>
+</div>
+</div>
+</div>
+
+<div class="flex flex-col sm:flex-row gap-2.5">
+<div class="relative flex-1"><input id="searchInput" type="text" oninput="renderCatalogGrids(this.value)" placeholder="ဂိမ်း သို့မဟုတ် Digital Service ရှာရန်..." class="w-full pl-4 pr-9 py-2.5 rounded-2xl bg-surface-800 border border-white/10 text-xs sm:text-sm text-white placeholder-gray-400 focus:outline-none focus:border-lime-400"/></div>
+<div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+<button onclick="setCategoryFilter('all')" id="cat-all" class="shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold bg-lime-400 text-surface-950">အားလုံး</button>
+<button onclick="setCategoryFilter('games')" id="cat-games" class="shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold bg-surface-800 text-gray-300 border border-white/10">🎮 Games</button>
+<button onclick="setCategoryFilter('apps')" id="cat-apps" class="shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold bg-surface-800 text-gray-300 border border-white/10">📱 Digital</button>
+<button onclick="switchMainTab('spin')" class="shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold bg-surface-800 text-amber-300 border border-amber-400/30">🎯 ကံစမ်း</button>
+</div>
+</div>
+
+<div id="section-games" class="space-y-3">
+<div class="flex items-center justify-between"><div class="flex items-center gap-2"><span class="w-2 h-5 rounded-full bg-lime-400"></span><h2 class="font-display font-extrabold text-sm sm:text-base text-white">MOBILE GAMES</h2></div><button onclick="toggleSectionMore('games')" id="headerGamesMoreBtn" class="text-xs font-bold text-lime-400 px-3 py-1 rounded-xl bg-lime-400/10 border border-lime-400/25">More</button></div>
+<div id="gamesBentoGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+<div id="gamesMoreWrap" class="flex justify-center pt-1"><button onclick="toggleSectionMore('games')" id="gamesMoreBtn" class="w-full sm:w-auto min-w-[230px] py-2.5 px-5 rounded-2xl bg-surface-800 hover:bg-surface-700 border border-lime-400/30 text-lime-300 font-bold text-xs"></button></div>
+</div>
+
+<div id="section-apps" class="space-y-3 pt-2">
+<div class="flex items-center justify-between"><div class="flex items-center gap-2"><span class="w-2 h-5 rounded-full bg-emerald-400"></span><h2 class="font-display font-extrabold text-sm sm:text-base text-white">DIGITAL SERVICES</h2></div><button onclick="toggleSectionMore('apps')" id="headerAppsMoreBtn" class="text-xs font-bold text-emerald-400 px-3 py-1 rounded-xl bg-emerald-400/10 border border-emerald-400/25">More</button></div>
+<div id="appsBentoGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+<div id="appsMoreWrap" class="flex justify-center pt-1"><button onclick="toggleSectionMore('apps')" id="appsMoreBtn" class="w-full sm:w-auto min-w-[230px] py-2.5 px-5 rounded-2xl bg-surface-800 hover:bg-surface-700 border border-emerald-400/30 text-emerald-300 font-bold text-xs"></button></div>
+</div>
+</section>
+
+<section id="tab-spin" class="hidden max-w-md mx-auto pb-8">
+<div class="rounded-[32px] spin-bg-grid bg-[#080d06] border border-lime-400/20 p-4 sm:p-6 shadow-2xl flex flex-col items-center">
+<div class="w-full flex items-center justify-between bg-surface-900/90 border border-white/10 rounded-2xl px-4 py-2.5 mb-5">
+<div class="text-xs text-gray-300">လှည့်ခွင့်လက်မှတ်: <strong id="spinTicketCount" class="text-lime-400 font-display text-sm">0</strong> ကြိမ်</div>
+<span class="text-[11px] text-amber-300 font-semibold" id="spinCostLabel">၁ ကြိမ် = 500 Ks</span>
+</div>
+<div class="relative flex flex-col items-center my-2">
+<div class="z-20 -mb-3 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]"><svg width="34" height="34" viewBox="0 0 34 34"><polygon points="17,32 4,6 30,6" fill="#a3e635" stroke="#060905" stroke-width="3" stroke-linejoin="round"/></svg></div>
+<div class="w-72 h-72 sm:w-80 sm:h-80 rounded-full wheel-outer-rim p-3.5 relative flex items-center justify-center">
+<span class="w-3 h-3 rounded-full bg-lime-200 shadow-[0_0_10px_#fff] absolute top-1.5 left-1/2 -translate-x-1/2"></span>
+<span class="w-3 h-3 rounded-full bg-lime-200 shadow-[0_0_10px_#fff] absolute bottom-1.5 left-1/2 -translate-x-1/2"></span>
+<span class="w-3 h-3 rounded-full bg-lime-200 shadow-[0_0_10px_#fff] absolute left-1.5 top-1/2 -translate-y-1/2"></span>
+<span class="w-3 h-3 rounded-full bg-lime-200 shadow-[0_0_10px_#fff] absolute right-1.5 top-1/2 -translate-y-1/2"></span>
+<span class="w-3 h-3 rounded-full bg-lime-200 shadow-[0_0_10px_#fff] absolute top-[14%] left-[14%]"></span>
+<span class="w-3 h-3 rounded-full bg-lime-200 shadow-[0_0_10px_#fff] absolute top-[14%] right-[14%]"></span>
+<span class="w-3 h-3 rounded-full bg-lime-200 shadow-[0_0_10px_#fff] absolute bottom-[14%] left-[14%]"></span>
+<span class="w-3 h-3 rounded-full bg-lime-200 shadow-[0_0_10px_#fff] absolute bottom-[14%] right-[14%]"></span>
+<div id="luckyWheelPlate" class="w-full h-full rounded-full wheel-inner-plate relative overflow-hidden">
+<svg class="w-full h-full" viewBox="0 0 260 260">
+<g stroke="#e5e7eb" stroke-width="1.5"><line x1="130" y1="0" x2="130" y2="260"/><line x1="17" y1="65" x2="243" y2="195"/><line x1="17" y1="195" x2="243" y2="65"/></g>
+<g id="wheelTextGroup" font-family="Inter, Padauk, sans-serif" font-weight="800" font-size="12.5" fill="#4b5563" text-anchor="middle">
+<text transform="translate(130,130) rotate(30) translate(0,-76)">30ကျပ်</text>
+<text transform="translate(130,130) rotate(90) translate(0,-76)">100 ကျပ်</text>
+<text transform="translate(130,130) rotate(150) translate(0,-76)">SPIN</text>
+<text transform="translate(130,130) rotate(210) translate(0,-76)">500ကျပ်</text>
+<text transform="translate(130,130) rotate(270) translate(0,-76)">3000ကျပ်</text>
+<text transform="translate(130,130) rotate(330) translate(0,-76)">THANK</text>
+</g>
+</svg>
+</div>
+<div class="w-20 h-20 rounded-full wheel-center-knob absolute z-10 border-4 border-lime-300/60"></div>
+</div>
+<div class="w-44 h-14 -mt-3 wheel-stand-neck z-0"></div>
+<div class="w-56 h-5 -mt-1 rounded-full wheel-stand-base"></div>
+</div>
+<button id="spinStartBtn" onclick="startWheelSpin()" class="mt-5 w-48 py-3 rounded-full spin-start-btn text-white font-display font-extrabold text-base tracking-wide transition">Start</button>
+<div class="w-full mt-7 rounded-2xl bg-[#11180e] border border-lime-400/20 overflow-hidden shadow-xl">
+<div class="py-3.5 px-4 bg-gradient-to-r from-[#1c2a17] via-[#25391e] to-[#1c2a17] border-b border-white/10 text-center"><h3 class="font-display font-bold text-sm sm:text-base text-white">Available Prizes</h3></div>
+<div id="availablePrizesTable" class="divide-y divide-white/10 text-xs sm:text-sm"></div>
+</div>
+</div>
+</section>
+
+<section id="tab-wallet" class="hidden max-w-xl mx-auto space-y-4">
+<div class="rounded-3xl p-5 bg-gradient-to-br from-surface-800 to-surface-900 border border-lime-400/30 flex items-center justify-between">
+<div><span class="text-xs text-lime-400 font-bold uppercase">LIME WALLET</span><h2 class="text-lg font-bold text-white mt-0.5">ငွေဖြည့်သွင်းရန်</h2></div>
+<div class="text-right"><span class="text-[11px] text-gray-400">လက်ရှိလက်ကျန်</span><div class="font-display font-extrabold text-lg text-lime-400" id="walletViewBalance">— Ks</div></div>
+</div>
+<div class="rounded-3xl p-5 bg-surface-900 border border-white/10 space-y-4">
+<h3 class="text-xs font-bold text-gray-300">အဆင့် (၁) — ငွေလွှဲအကောင့် ရွေးပါ</h3>
+<div id="paymentChannelsGrid" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5"></div>
+<div class="p-4 rounded-2xl bg-surface-950 border border-lime-400/30 flex items-center justify-between gap-3">
+<div><div class="text-xs text-gray-400"><span id="payChannelLabel" class="text-lime-400 font-bold">KBZPay</span> ငွေလွှဲရမည့်ဖုန်းနံပါတ်</div><div id="payPhoneNumber" class="font-display font-black text-lg text-white tracking-wider mt-0.5">—</div><div id="payHolderName" class="text-xs text-gray-400">—</div></div>
+<button type="button" onclick="copyReceiverPhone()" class="px-4 py-2.5 rounded-xl bg-lime-400 text-surface-950 font-bold text-xs shrink-0">Copy</button>
+</div>
+</div>
+<form onsubmit="handleWalletTopUp(event)" class="rounded-3xl p-5 bg-surface-900 border border-white/10 space-y-4">
+<h3 class="text-xs font-bold text-gray-300">အဆင့် (၂) — ပမာဏ နှင့် ပြေစာ</h3>
+<p class="text-xs leading-relaxed text-amber-200 bg-amber-400/10 border border-amber-400/20 rounded-xl p-3">⚠️ Admin အတည်ပြုမှသာ လက်ကျန်တိုးပါမည်။ ပြေစာ နောက်ဆုံး ၆ လုံး တိတိကျကျ ထည့်ပါ။</p>
+<div class="grid grid-cols-3 gap-2">
+<button type="button" onclick="document.getElementById('topupAmountField').value=5000" class="py-2 rounded-xl bg-surface-800 border border-white/10 text-xs font-bold text-white">5,000 Ks</button>
+<button type="button" onclick="document.getElementById('topupAmountField').value=10000" class="py-2 rounded-xl bg-surface-800 border border-white/10 text-xs font-bold text-white">10,000 Ks</button>
+<button type="button" onclick="document.getElementById('topupAmountField').value=20000" class="py-2 rounded-xl bg-surface-800 border border-white/10 text-xs font-bold text-white">20,000 Ks</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<input id="topupAmountField" type="number" min="1000" required placeholder="ငွေပမာဏ" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-950 border border-white/15 text-white text-sm focus:outline-none focus:border-lime-400"/>
+<input id="topupDigitsField" type="text" maxlength="6" required placeholder="ပြေစာ နောက်ဆုံး ၆ လုံး" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-950 border border-white/15 text-white text-sm font-display tracking-widest focus:outline-none focus:border-lime-400"/>
+</div>
+<button type="submit" id="topupSubmitBtn" class="w-full py-3.5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-surface-950 font-bold text-sm shadow-lg">📨 ငွေဖြည့်တောင်းဆိုမည်</button>
+</form>
+</section>
+
+<section id="tab-orders" class="hidden max-w-2xl mx-auto space-y-4">
+<div class="flex items-center justify-between"><h2 class="font-display font-bold text-lg text-white">ဝယ်ယူထားသော အော်ဒါများ</h2><span id="totalOrdersCount" class="px-3 py-1 rounded-full bg-lime-400/15 border border-lime-400/30 text-lime-300 text-xs font-bold">0</span></div>
+<div id="ordersFeedContainer" class="space-y-3"></div>
+</section>
+
+<section id="tab-history" class="hidden max-w-2xl mx-auto space-y-4">
+<div class="rounded-3xl p-4 bg-surface-900 border border-lime-400/30"><h2 class="text-base font-bold text-white">ငွေကြေး မှတ်တမ်း</h2><p class="text-xs text-gray-400">ငွေဖြည့် / ဝယ်ယူ / Spin / Refund အားလုံး</p></div>
+<div id="historyFeedContainer" class="space-y-3"></div>
+</section>
+
+<section id="tab-profile" class="hidden max-w-xl mx-auto space-y-4">
+<div class="rounded-3xl p-5 bg-surface-900 border border-lime-400/30 flex items-center gap-4">
+<div class="w-14 h-14 rounded-2xl bg-white p-0.5 shrink-0"><svg class="w-full h-full"><use href="#lime-store-logo"></use></svg></div>
+<div class="flex-1 min-w-0"><span id="profileRoleBadge" class="px-2 py-0.5 rounded-full bg-lime-400/15 text-lime-300 text-[10px] font-bold">MEMBER</span><h3 id="profileDisplayName" class="text-base font-bold text-white truncate mt-1">Guest</h3><p id="profileDisplayPhone" class="text-xs text-gray-400">—</p></div>
+</div>
+<div class="rounded-3xl p-4 bg-surface-900 border border-lime-400/20 flex items-center justify-between text-xs">
+<div><span class="font-bold text-lime-400 block">☁️ Supabase Cloud Bridge</span><span class="text-gray-400" id="bridgeStatus">Connecting...</span></div>
+<span id="adminSyncBadge" class="px-2.5 py-1 rounded-full bg-lime-400/15 text-lime-300 font-bold">SYNCING...</span>
+</div>
+<div class="rounded-3xl bg-surface-900 border border-white/10 divide-y divide-white/5 overflow-hidden text-xs sm:text-sm">
+<button onclick="switchMainTab('spin')" class="w-full p-4 flex items-center justify-between text-left hover:bg-white/5"><span>🎯 Lucky Spin</span><span class="text-gray-500">›</span></button>
+<button onclick="openInfoModal('topbuyers')" class="w-full p-4 flex items-center justify-between text-left hover:bg-white/5"><span>🏆 Top Buyers</span><span class="text-gray-500">›</span></button>
+<button onclick="openInfoModal('notice')" class="w-full p-4 flex items-center justify-between text-left hover:bg-white/5"><span>📢 ဆိုင်အသိပေးချက်များ</span><span class="text-gray-500">›</span></button>
+<button onclick="openInfoModal('support')" class="w-full p-4 flex items-center justify-between text-left hover:bg-white/5"><span>🎧 Admin ဆက်သွယ်</span><span class="text-gray-500">›</span></button>
+<button onclick="doLogout()" class="w-full p-4 flex items-center justify-between text-left text-rose-300 hover:bg-rose-500/10"><span>🚪 Logout</span><span class="text-gray-500">›</span></button>
+<
+</div>
+</section>
+
+</main>
+
+<div class="fixed bottom-0 inset-x-0 z-30 glass-dock">
+<nav class="max-w-md mx-auto px-2 h-16 flex items-center justify-around">
+<button onclick="switchMainTab('store')" id="dock-store" class="dock-btn flex-1 py-1 flex flex-col items-center gap-1 text-lime-400"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg><span class="text-[11px] font-bold">Home</span></button>
+<button onclick="switchMainTab('orders')" id="dock-orders" class="dock-btn flex-1 py-1 flex flex-col items-center gap-1 text-gray-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg><span class="text-[11px] font-semibold">အော်ဒါ</span></button>
+<div class="flex-1 flex flex-col items-center"><button onclick="switchMainTab('wallet')" id="dock-wallet" class="-mt-6 w-14 h-14 rounded-full center-wallet-orb text-surface-950 flex items-center justify-center border-4 border-[#060905] active:scale-95 transition"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M21 18v1c0 1.1-.9 2-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h14c1.1 0 2 .9 2 2v1h-9a2 2 0 00-2 2v8a2 2 0 002 2h9zm-9-2h10V8H12v8zm4-2.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg></button><span class="text-[11px] font-bold text-lime-400 mt-0.5">ငွေဖြည့်</span></div>
+<button onclick="switchMainTab('history')" id="dock-history" class="dock-btn flex-1 py-1 flex flex-col items-center gap-1 text-gray-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span class="text-[11px] font-semibold">မှတ်တမ်း</span></button>
+<button onclick="switchMainTab('profile')" id="dock-profile" class="dock-btn flex-1 py-1 flex flex-col items-center gap-1 text-gray-400"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg><span class="text-[11px] font-semibold">Profile</span></button>
+</nav>
+</div>
+
+<div id="checkoutModal" class="fixed inset-0 z-50 hidden items-end sm:items-center justify-center bg-black/80 backdrop-blur-md p-0 sm:p-4">
+<div class="w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl bg-surface-900 border-t sm:border border-lime-400/40 shadow-2xl p-5 space-y-4">
+<div class="flex items-center justify-between gap-3 border-b border-white/10 pb-3.5">
+<div class="flex items-center gap-3"><img id="checkoutLogoImg" src="" alt="" class="w-13 h-13 apk-icon-wrap object-cover border border-white/15"/><div><h3 id="checkoutTitle" class="font-bold text-base text-white"></h3><p id="checkoutSubtitle" class="text-xs text-gray-400"></p></div></div>
+<button onclick="closeCheckoutModal()" class="w-8 h-8 rounded-full bg-surface-800 text-gray-300">✕</button>
+</div>
+<form onsubmit="submitQuickOrder(event)" class="space-y-4">
+<div class="p-3.5 rounded-2xl bg-surface-950 border border-white/10 space-y-2.5">
+<label id="checkoutFieldLabel" class="text-xs font-bold text-lime-400 block">အကောင့် / ID ဖြည့်ပါ</label>
+<div id="checkoutDynamicFields"></div>
+</div>
+<div><label class="text-xs font-bold text-lime-400 block mb-2">ပက်ကေ့ချ် ရွေးပါ</label><div id="checkoutPackagesGrid" class="grid grid-cols-2 gap-2.5"></div></div>
+<div class="pt-2 border-t border-white/10 flex items-center justify-between gap-4">
+<div><div class="text-[11px] text-gray-400">ကျသင့်ငွေ</div><div id="checkoutTotalPrice" class="font-display font-black text-xl text-lime-400">0 Ks</div></div>
+<button type="submit" id="checkoutSubmitBtn" class="flex-1 py-3.5 px-5 rounded-2xl bg-lime-400 hover:bg-lime-300 text-surface-950 font-extrabold text-sm shadow-lg">ဝယ်ယူမည် →</button>
+</div>
+</form>
+</div>
+</div>
+
+<div id="dynamicInfoModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/85 backdrop-blur-md p-4">
+<div class="w-full max-w-md rounded-3xl bg-surface-900 border border-lime-400/40 p-5 space-y-4 shadow-2xl">
+<div class="flex items-center justify-between border-b border-white/10 pb-3"><h3 id="dynModalTitle" class="font-bold text-base text-lime-400"></h3><button onclick="closeInfoModal()" class="w-8 h-8 rounded-full bg-surface-800 text-gray-300">✕</button></div>
+<div id="dynModalBody" class="text-xs text-gray-200 space-y-3"></div>
+</div>
+</div>
+
+<div id="authModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-black/90 backdrop-blur-md p-4">
+<div class="w-full max-w-md rounded-3xl bg-surface-900 border border-lime-400/40 p-6 space-y-4 shadow-2xl">
+<div class="text-center"><div class="w-16 h-16 rounded-2xl bg-white p-0.5 mx-auto mb-3"><svg class="w-full h-full"><use href="#lime-store-logo"></use></svg></div><h2 class="text-lg font-bold text-white" id="authTitle">Login</h2><p class="text-xs text-gray-400 mt-1" id="authSubtitle">Lime Store အကောင့်ဖြင့် ဝင်ရောက်ပါ</p></div>
+<div class="space-y-2.5">
+<input id="authName" type="text" placeholder="အမည်" class="hidden w-full px-3.5 py-2.5 rounded-xl bg-surface-950 border border-white/15 text-white text-sm focus:outline-none focus:border-lime-400"/>
+<input id="authPhone" type="tel" placeholder="ဖုန်းနံပါတ်" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-950 border border-white/15 text-white text-sm focus:outline-none focus:border-lime-400"/>
+<input id="authPassword" type="password" placeholder="Password" class="w-full px-3.5 py-2.5 rounded-xl bg-surface-950 border border-white/15 text-white text-sm focus:outline-none focus:border-lime-400"/>
+</div>
+<button onclick="submitAuth()" id="authSubmitBtn" class="w-full py-3 rounded-xl bg-lime-400 text-surface-950 font-bold text-sm">Login</button>
+<button onclick="toggleAuthMode()" id="authToggleBtn" class="w-full py-2 text-xs text-lime-400 font-semibold">အကောင့်အသစ် ဖွင့်မည်</button>
+<div class="p-2.5 rounded-xl bg-surface-950 border border-white/10 text-[10px] text-gray-400 leading-relaxed">
+<div class="font-bold text-lime-400 mb-1">Demo Accounts:</div>
+<div>👤 User: <code class="text-white">09970001234</code> / <code class="text-white">user123</code></div>
+<div>🔧 Admin: <code class="text-white">09798889900</code> / <code class="text-white">admin123</code></div>
+</div>
+</div>
+</div>
+
+<!-- Order Voucher Modal -->
+<div id="voucherModal" class="fixed inset-0 z-[55] hidden items-center justify-center bg-black/90 backdrop-blur-md p-4 overflow-y-auto">
+<div class="w-full max-w-sm my-auto rounded-3xl bg-[#0b1009] border border-lime-400/40 shadow-2xl overflow-hidden">
+<div class="relative bg-gradient-to-br from-lime-500/20 to-surface-900 p-5 border-b border-dashed border-lime-400/30 voucher-notch">
+<button onclick="closeVoucherModal()" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/40 text-gray-300 flex items-center justify-center">✕</button>
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-white p-0.5 shrink-0"><svg class="w-full h-full"><use href="#lime-store-logo"></use></svg></div>
+<div class="min-w-0"><div class="font-display font-black text-sm text-white">LIME GAME STORE</div><div class="text-[10px] text-lime-400 font-bold tracking-widest">OFFICIAL VOUCHER</div></div>
+</div>
+<div id="voucherCode" class="font-display font-black text-2xl text-lime-400 tracking-wider text-center mt-4">—</div>
+<div id="voucherStatus" class="text-center mt-1.5"></div>
+</div>
+<div id="voucherBody" class="p-5 space-y-1.5 text-xs"></div>
+<div class="px-5 pb-3 flex gap-2">
+<button onclick="closeVoucherModal()" class="flex-1 py-3 rounded-2xl bg-surface-800 hover:bg-surface-700 text-white font-bold text-xs">ပိတ်မည်</button>
+<button onclick="copyVoucherText()" class="flex-1 py-3 rounded-2xl bg-lime-400 hover:bg-lime-300 text-surface-950 font-bold text-xs">📋 Copy</button>
+</div>
+<div class="px-5 pb-4 text-center text-[10px] text-gray-500 border-t border-white/5 pt-3">Thank you for choosing Lime Game Store 🌿</div>
+</div>
+</div>
+
+<div id="toastNotification" class="fixed top-20 left-1/2 -translate-x-1/2 z-[70] hidden px-4 py-3 rounded-2xl bg-surface-900 border-2 border-lime-400 text-white text-xs font-bold shadow-2xl flex items-center gap-2.5 max-w-[92vw]">
+<span class="w-2.5 h-2.5 rounded-full bg-lime-400 animate-ping shrink-0"></span>
+<span id="toastMessage"></span>
+</div>
+
+<script>
+window.onerror=function(msg,url,line){console.error("System Error: "+msg+" Line: "+line);return false;};
+
+window.LimeBridge=(function(){
+'use strict';
+const VERSION=6;
+const KEY='lime_bridge_v'+VERSION;
+const SESSION_KEY='lime_session_user_v'+VERSION;
+const CHANNEL='lime_sync_v'+VERSION;
+const CDN='https://fls-a09dce4a-8b00-44f8-aa66-c91c285e16f1.laravel.cloud/';
+
+// ═══ SUPABASE CREDENTIALS (100% MATCHED WITH heheindex.html) ═══
+const SUPABASE_URL='https://nkhkrqvexqxkvmmkrbqx.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5raGtycXZleHF4a3ZtbWtyYnF4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI1NzM3NTIsImV4cCI6MjEwODE0OTc1Mn0.Dff1Wqk68nEg1_CI14HLZlixBXLJ84xJWyG7Nha97ws';
+const TABLE_NAME='lime_store_state';
+const ROW_ID='main';
+const RPC_NAME='lime_safe_update';
+
+let sb=null;
+try{
+  if(window.supabase){
+    sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+  }
+}catch(e){console.error('[Supabase Init Error]',e);}
+
+let bc=null;
+try{if(typeof BroadcastChannel!=='undefined')bc=new BroadcastChannel(CHANNEL);}catch(e){}
+let _memoryStorage={};
+const _storage={
+  getItem:function(k){try{return localStorage.getItem(k);}catch(e){return _memoryStorage[k]||null;}},
+  setItem:function(k,v){try{localStorage.setItem(k,v);}catch(e){_memoryStorage[k]=v;}},
+  removeItem:function(k){try{localStorage.removeItem(k);}catch(e){delete _memoryStorage[k];}}
+};
+
+let _listeners=[];
+function _emit(state){
+  _listeners.forEach(cb=>{try{cb(state);}catch(e){console.error(e);}});
+}
+
+function _setStatusUI(ok,text){
+  const badge=document.getElementById('adminSyncBadge');
+  const dot=document.getElementById('headerSyncDot');
+  if(badge){
+    badge.textContent=ok?'🟢 SUPABASE LIVE':'🔴 LOCAL / OFFLINE';
+    badge.className=ok?'px-2.5 py-1 rounded-full bg-lime-400/15 text-lime-300 font-bold':'px-2.5 py-1 rounded-full bg-rose-500/20 text-rose-300 font-bold';
+  }
+  if(dot){
+    dot.className=ok?'w-1.5 h-1.5 rounded-full bg-lime-400 animate-pulse':'w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse';
+  }
+}
+
+function defaultState(){
+return{
+version:VERSION,seededAt:new Date().toISOString(),
+users:[
+{id:'u_admin',name:'Admin',phone:'09798889900',password:'admin123',role:'admin',balance:0,spinTickets:0,isActive:true,createdAt:'2026-01-01T00:00:00Z'},
+{id:'u_001',name:'Lime Pro Gamer',phone:'09970001234',password:'user123',role:'user',balance:25000,spinTickets:1,isActive:true,createdAt:'2026-01-01T00:00:00Z'},
+{id:'u_002',name:'Ko Htet Naing',phone:'09123456789',password:'user123',role:'user',balance:150000,spinTickets:3,isActive:true,createdAt:'2026-01-02T00:00:00Z'}
+],
+currentUserId:null,
+products:[
+{id:'p_mlbb',slug:'mlbb',type:'game',title:'မိုဘိုင်းလက်ကျဉ်',subtitle:'Mobile Legends: Bang Bang',logoUrl:CDN+'logo/01M4S16ZS5QEB9QYMXHK6F9PVH.jpg',tag:'⚡ 1 Min',startPrice:'4,800 Ks မှစ၍',needsZone:true,inputLabel:null,isActive:true,sortOrder:0,packages:[
+{id:'pkg_mlbb_1',name:'Weekly Diamond Pass',price:6200,bonus:'Hot 🔥',isActive:true,sortOrder:0},
+{id:'pkg_mlbb_2',name:'86 Diamonds',price:4800,bonus:'Instant',isActive:true,sortOrder:1},
+{id:'pkg_mlbb_3',name:'172 Diamonds',price:9500,bonus:'Instant',isActive:true,sortOrder:2},
+{id:'pkg_mlbb_4',name:'257 Diamonds',price:14200,bonus:'Popular',isActive:true,sortOrder:3},
+{id:'pkg_mlbb_5',name:'706 Diamonds',price:38500,bonus:'+Bonus',isActive:true,sortOrder:4},
+{id:'pkg_mlbb_6',name:'2195 Diamonds',price:115000,bonus:'VIP',isActive:true,sortOrder:5}
+]},
+{id:'p_pubg',slug:'pubg',type:'game',title:'ပီယူပီဂျီ',subtitle:'PUBG Mobile Global',logoUrl:CDN+'logo/01M0J7643XAXNY7C2F95XY4PZQ.jpg',tag:'⚡ Instant',startPrice:'3,900 Ks မှစ၍',needsZone:false,inputLabel:null,isActive:true,sortOrder:1,packages:[
+{id:'pkg_pubg_1',name:'60 UC Global',price:3900,bonus:'Instant',isActive:true,sortOrder:0},
+{id:'pkg_pubg_2',name:'325 UC Global',price:19200,bonus:'RP Pass',isActive:true,sortOrder:1},
+{id:'pkg_pubg_3',name:'660 UC Global',price:38000,bonus:'Best',isActive:true,sortOrder:2},
+{id:'pkg_pubg_4',name:'1800 UC Global',price:94000,bonus:'Pro',isActive:true,sortOrder:3}
+]},
+{id:'p_roblox',slug:'roblox',type:'game',title:'Roblox',subtitle:'Roblox Robux & Gift Card',logoUrl:CDN+'logo/01KT3KSPT9FXXCKM46RM0NNPGX.jpg',tag:'🔥 Popular',startPrice:'4,200 Ks မှစ၍',needsZone:false,inputLabel:null,isActive:true,sortOrder:2,packages:[
+{id:'pkg_rbx_1',name:'80 Robux',price:4200,bonus:'Fast',isActive:true,sortOrder:0},
+{id:'pkg_rbx_2',name:'400 Robux',price:18500,bonus:'Popular',isActive:true,sortOrder:1},
+{id:'pkg_rbx_3',name:'800 Robux',price:36000,bonus:'Best',isActive:true,sortOrder:2},
+{id:'pkg_rbx_4',name:'1700 Robux',price:74000,bonus:'Mega',isActive:true,sortOrder:3}
+]},
+{id:'p_freefire',slug:'freefire',type:'game',title:'Free Fire Global',subtitle:'Garena Free Fire Diamonds',logoUrl:CDN+'logo/01KKJ5MA5Y07DC95ARZJ4RV1QQ.jpg',tag:'⚡ Instant',startPrice:'3,800 Ks မှစ၍',needsZone:false,inputLabel:null,isActive:true,sortOrder:3,packages:[
+{id:'pkg_ff_1',name:'100 Diamonds',price:3800,bonus:'UID',isActive:true,sortOrder:0},
+{id:'pkg_ff_2',name:'310 Diamonds',price:11200,bonus:'Popular',isActive:true,sortOrder:1},
+{id:'pkg_ff_3',name:'520 Diamonds',price:18500,bonus:'Pass',isActive:true,sortOrder:2},
+{id:'pkg_ff_4',name:'Weekly Membership',price:6800,bonus:'Hot',isActive:true,sortOrder:3}
+]},
+{id:'p_gmirage',slug:'gmirage_city',type:'game',title:'Granstar Mirage City',subtitle:'Granstar Mirage City',logoUrl:CDN+'logo/01M0ZQVGRVA3PSBS2DKC79HZQH.jpg',tag:'⚡ Auto',startPrice:'4,500 Ks မှစ၍',needsZone:false,inputLabel:null,isActive:true,sortOrder:4,packages:[
+{id:'pkg_gm_1',name:'100 Mirage Gems',price:4500,bonus:'Instant',isActive:true,sortOrder:0},
+{id:'pkg_gm_2',name:'520 Mirage Gems',price:21000,bonus:'Popular',isActive:true,sortOrder:1},
+{id:'pkg_gm_3',name:'1100 Mirage Gems',price:41000,bonus:'VIP',isActive:true,sortOrder:2}
+]},
+{id:'p_bls',slug:'bls',type:'game',title:'Blood Strike',subtitle:'Blood Strike Gold',logoUrl:CDN+'logo/01JZ3KV10C5EZ5BN4JMTFEYXKV.png',tag:'⚡ 1 Min',startPrice:'3,600 Ks မှစ၍',needsZone:false,inputLabel:null,isActive:true,sortOrder:5,packages:[
+{id:'pkg_bls_1',name:'105 Gold',price:3600,bonus:'Instant',isActive:true,sortOrder:0},
+{id:'pkg_bls_2',name:'320 Gold',price:10500,bonus:'Pass',isActive:true,sortOrder:1},
+{id:'pkg_bls_3',name:'540 Gold',price:17200,bonus:'Popular',isActive:true,sortOrder:2}
+]},
+{id:'p_eafc',slug:'eafcmobile_my',type:'game',title:'EAFC Mobile MY',subtitle:'EA Sports FC Mobile Points',logoUrl:CDN+'logo/01KKJ3X9MDEZHGBZRR3MXD4E1V.jpeg',tag:'⚽ Official',startPrice:'2,500 Ks မှစ၍',needsZone:false,inputLabel:null,isActive:true,sortOrder:6,packages:[
+{id:'pkg_eafc_1',name:'40 FC Points',price:2500,bonus:'Instant',isActive:true,sortOrder:0},
+{id:'pkg_eafc_2',name:'100 FC Points',price:5800,bonus:'Popular',isActive:true,sortOrder:1},
+{id:'pkg_eafc_3',name:'520 FC Points',price:27500,bonus:'Star Pass',isActive:true,sortOrder:2}
+]},
+{id:'p_wwm',slug:'wwm',type:'game',title:'Where Winds Meet',subtitle:'Where Winds Meet Coins',logoUrl:CDN+'logo/01KCZB62MPZEC6M4BGZQE3V217.jpg',tag:'✨ New',startPrice:'16,500 Ks မှစ၍',needsZone:false,inputLabel:null,isActive:true,sortOrder:7,packages:[
+{id:'pkg_wwm_1',name:'Monthly Blessing Pass',price:18500,bonus:'30 Days',isActive:true,sortOrder:0},
+{id:'pkg_wwm_2',name:'300 Jade Coins',price:16500,bonus:'Instant',isActive:true,sortOrder:1},
+{id:'pkg_wwm_3',name:'980 Jade Coins',price:49000,bonus:'Popular',isActive:true,sortOrder:2}
+]},
+{id:'p_tiktok',slug:'tiktok',type:'app',title:'တီးတော့(အသစ်)',subtitle:'TikTok Coins & Live Gift',logoUrl:CDN+'logo/01JZ3RW989ZE3EXHZVG7BVQJ8Z.png',tag:'🔥 Best',startPrice:'4,200 Ks မှစ၍',needsZone:false,inputLabel:'TikTok Username (@...)',isActive:true,sortOrder:0,packages:[
+{id:'pkg_tt_1',name:'70 TikTok Coins',price:4200,bonus:'Fast',isActive:true,sortOrder:0},
+{id:'pkg_tt_2',name:'350 TikTok Coins',price:20500,bonus:'Fast',isActive:true,sortOrder:1},
+{id:'pkg_tt_3',name:'700 TikTok Coins',price:40500,bonus:'Popular',isActive:true,sortOrder:2}
+]},
+{id:'p_telegram',slug:'telegram',type:'app',title:'Telegram',subtitle:'Telegram Premium & Stars',logoUrl:CDN+'logo/01JZ3RJE7RGAM58RVVTY8GVBFW.jpg',tag:'⭐ Official',startPrice:'19,500 Ks မှစ၍',needsZone:false,inputLabel:'Telegram Username (@...)',isActive:true,sortOrder:1,packages:[
+{id:'pkg_tg_1',name:'250 Telegram Stars',price:19500,bonus:'Instant',isActive:true,sortOrder:0},
+{id:'pkg_tg_2',name:'Premium 3 Months',price:48000,bonus:'Official',isActive:true,sortOrder:1},
+{id:'pkg_tg_3',name:'Premium 12 Months',price:115000,bonus:'Save 40%',isActive:true,sortOrder:2}
+]},
+{id:'p_capcut',slug:'capcut',type:'app',title:'CapCut',subtitle:'CapCut Pro Video Editor',logoUrl:CDN+'logo/01KSR7ASA1HR1ZX63QF33YVK28.jpg',tag:'🎬 Creator',startPrice:'6,500 Ks မှစ၍',needsZone:false,inputLabel:'Phone သို့မဟုတ် Email',isActive:true,sortOrder:2,packages:[
+{id:'pkg_cc_1',name:'CapCut Pro 1M (Shared)',price:6500,bonus:'Pro',isActive:true,sortOrder:0},
+{id:'pkg_cc_2',name:'CapCut Pro 1M (Private)',price:14500,bonus:'Warranty',isActive:true,sortOrder:1},
+{id:'pkg_cc_3',name:'CapCut Pro 1Y (Private)',price:95000,bonus:'VIP',isActive:true,sortOrder:2}
+]},
+{id:'p_expressvpn',slug:'expressvpn',type:'app',title:'Express Vpn',subtitle:'ExpressVPN High-Speed Key',logoUrl:CDN+'logo/01KT4P5EGGGFZAR679M7DC05ZH.jpg',tag:'🛡️ Warranty',startPrice:'8,500 Ks မှစ၍',needsZone:false,inputLabel:'Phone သို့မဟုတ် Telegram',isActive:true,sortOrder:3,packages:[
+{id:'pkg_ev_1',name:'1 Month (1 Device)',price:8500,bonus:'Warranty',isActive:true,sortOrder:0},
+{id:'pkg_ev_2',name:'1 Month (5 Devices)',price:24000,bonus:'Private',isActive:true,sortOrder:1},
+{id:'pkg_ev_3',name:'6 Months Private',price:45000,bonus:'Best',isActive:true,sortOrder:2}
+]},
+{id:'p_mochi',slug:'mochi',type:'app',title:'Mochi Chat',subtitle:'Mochi Chat Official Coins',logoUrl:CDN+'logo/01M03M0Z96DF4ETV5SBYMVMXEM.jpg',tag:'⚡ Fast',startPrice:'5,000 Ks မှစ၍',needsZone:false,inputLabel:'Mochi Chat ID',isActive:true,sortOrder:4,packages:[
+{id:'pkg_mc_1',name:'500 Mochi Coins',price:5000,bonus:'Instant',isActive:true,sortOrder:0},
+{id:'pkg_mc_2',name:'1200 Mochi Coins',price:11500,bonus:'Popular',isActive:true,sortOrder:1}
+]},
+{id:'p_facebook',slug:'facebook',type:'app',title:'Facebook',subtitle:'Page Boost & Meta Verified',logoUrl:CDN+'logo/01KESJKPVT7HAW9QDXTKWF65JE.jpg',tag:'📈 Boost',startPrice:'22,500 Ks မှစ၍',needsZone:false,inputLabel:'Facebook Page / Profile Link',isActive:true,sortOrder:5,packages:[
+{id:'pkg_fb_1',name:'Page Boost ($5 Credit)',price:22500,bonus:'Reach',isActive:true,sortOrder:0},
+{id:'pkg_fb_2',name:'Page Boost ($10 Credit)',price:44000,bonus:'Popular',isActive:true,sortOrder:1}
+]},
+{id:'p_jumpvpn',slug:'jumpvpn',type:'app',title:'Jump Jump Vpn',subtitle:'Jump Jump VIP Gaming VPN',logoUrl:CDN+'logo/01M3R9CNRBP7GSPK80A8XCZSPC.jpg',tag:'🚀 Gaming',startPrice:'5,500 Ks မှစ၍',needsZone:false,inputLabel:'Jump Jump Email / ID',isActive:true,sortOrder:6,packages:[
+{id:'pkg_jj_1',name:'1 Month VIP Pass',price:5500,bonus:'Low Ping',isActive:true,sortOrder:0},
+{id:'pkg_jj_2',name:'3 Months VIP Pass',price:15000,bonus:'Popular',isActive:true,sortOrder:1}
+]},
+{id:'p_bigolive',slug:'bigolive',type:'app',title:'Bigo Live',subtitle:'Bigo Live Diamonds',logoUrl:CDN+'logo/01KM92JS3F02XZ650XYWJFNMPE.jpg',tag:'💎 Instant',startPrice:'4,500 Ks မှစ၍',needsZone:false,inputLabel:'Bigo ID',isActive:true,sortOrder:7,packages:[
+{id:'pkg_bl_1',name:'42 Bigo Diamonds',price:4500,bonus:'Instant',isActive:true,sortOrder:0},
+{id:'pkg_bl_2',name:'210 Bigo Diamonds',price:21500,bonus:'Popular',isActive:true,sortOrder:1}
+]}
+],
+banners:[
+{id:'bn_1',badge:'Instant Server',sub:'⚡ ၁ မိနစ်အတွင်း အော်တိုရောက်သည်',title:'Mobile Legends Weekly Pass & Diamonds',imgUrl:CDN+'sliders/01M52GRNDB6A83QN8D4V4P4FND.jpg',productId:'p_mlbb',sortOrder:0,isActive:true},
+{id:'bn_2',badge:'PUBG Global',sub:'🔥 Best Price Guarantee',title:'PUBG Mobile UC Direct Top-Up',imgUrl:CDN+'sliders/01M0J73WJPE12MZV8HAWPH1FZY.jpg',productId:'p_pubg',sortOrder:1,isActive:true},
+{id:'bn_3',badge:'Digital Hub',sub:'✨ Official Warranty',title:'TikTok, Telegram, VPN & CapCut Pro',imgUrl:CDN+'sliders/01KMEMACAZRVVTFYVGVVECZGJ4.jpg',productId:'p_tiktok',sortOrder:2,isActive:true}
+],
+paymentChannels:[
+{id:'pc_kbz',name:'KBZPay',badge:'KPay',colorClass:'bg-blue-600 text-white',phone:'09798889900',holder:'U Kyaw Lwin (Lime Store)',isActive:true,sortOrder:0},
+{id:'pc_wave',name:'WavePay',badge:'Wave',colorClass:'bg-amber-400 text-slate-950',phone:'09968889900',holder:'U Kyaw Lwin (Lime Store)',isActive:true,sortOrder:1},
+{id:'pc_aya',name:'AYA Pay',badge:'AYA',colorClass:'bg-rose-600 text-white',phone:'09458889900',holder:'U Kyaw Lwin (Lime Store)',isActive:true,sortOrder:2},
+{id:'pc_cb',name:'CB Pay',badge:'CB',colorClass:'bg-sky-500 text-white',phone:'09258889900',holder:'U Kyaw Lwin (Lime Store)',isActive:true,sortOrder:3}
+],
+spinPrizes:[
+{id:'pr_30',wheelText:'30ကျပ်',title:'30ကျပ်',description:'မြန်မာငွေ 30 ကျပ်',type:'cash',value:30,angle:30,weight:35,showInTable:true,isActive:true},
+{id:'pr_100',wheelText:'100 ကျပ်',title:'100 ကျပ်',description:'100 ကျပ် ကံထူးပါသည်။',type:'cash',value:100,angle:90,weight:25,showInTable:true,isActive:true},
+{id:'pr_spin',wheelText:'SPIN',title:'Spin',description:'နောက်တစ်ခါလှည့်ခွင့်',type:'ticket',value:1,angle:150,weight:20,showInTable:true,isActive:true},
+{id:'pr_500',wheelText:'500ကျပ်',title:'500ကျပ်',description:'500 ကျပ်ရယူပါ',type:'cash',value:500,angle:210,weight:10,showInTable:true,isActive:true},
+{id:'pr_3000',wheelText:'3000ကျပ်',title:'3000ကျပ်',description:'3000 ကျပ်ရယူပါ။',type:'cash',value:3000,angle:270,weight:3,showInTable:true,isActive:true},
+{id:'pr_thank',wheelText:'THANK',title:'THANK',description:'ကံစမ်းမှုအတွက် ကျေးဇူးတင်ပါသည်',type:'none',value:0,angle:330,weight:7,showInTable:false,isActive:true}
+],
+orders:[],topupRequests:[],transactions:[],spinHistory:[],notifications:[],
+settings:{storeHours:'ဆိုင်ဖွင့်ချိန် (9:00 AM – 11:00 PM)',announcement:'⚡ အော်ဒါများအားလုံး ၁ မိနစ်မှ ၅ မိနစ်အတွင်း အမြန်ဆုံး ဆောင်ရွက်ပေးနေပါသည်။',spinCost:500,supportTelegram:'@LimeGameStore',supportViber:'09-798889900',storeName:'Lime Game Store'}
+};
+}
+
+function _getSessionUserId(){
+  return _storage.getItem(SESSION_KEY)||null;
+}
+function _setSessionUserId(uid){
+  if(uid)_storage.setItem(SESSION_KEY,uid);
+  else _storage.removeItem(SESSION_KEY);
+}
+
+function _read(){
+  try{
+    const raw=_storage.getItem(KEY);
+    if(!raw)return null;
+    const state=JSON.parse(raw);
+    if(!state||state.version!==VERSION)return null;
+    state.currentUserId=_getSessionUserId();
+    return state;
+  }catch(e){return null;}
+}
+
+function _writeLocal(state){
+  try{
+    const copy=Object.assign({},state);
+    copy.currentUserId=null;
+    _storage.setItem(KEY,JSON.stringify(copy));
+    if(bc)bc.postMessage({type:'SYNC',state:copy,at:Date.now()});
+  }catch(e){}
+}
+
+async function _pushToSupabase(state){
+  if(!sb)return;
+  try{
+    const copy=JSON.parse(JSON.stringify(state));
+    copy.currentUserId=null;
+    
+    // RPC ကိုသုံးပြီး Database Function ကို ခေါ်မယ်
+    const {error}=await sb.rpc(RPC_NAME, { new_state: copy });
+    
+    if(error){
+      console.warn('[Supabase Save Warning]',error.message);
+      _setStatusUI(false,'DB Error');
+    }else{
+      _setStatusUI(true,'Supabase Live');
+    }
+  }catch(e){
+    console.warn('[Supabase Push Exception]',e);
+  }
+}
+
+async function _pullFromSupabase(){
+  if(!sb)return null;
+  try{
+    const {data,error}=await sb.from(TABLE_NAME).select('state').eq('id',ROW_ID).maybeSingle();
+    if(error){
+      console.warn('[Supabase Pull Warning]',error.message);
+      _setStatusUI(false,'DB Error');
+      return null;
+    }
+    if(data&&data.state&&data.state.version===VERSION){
+      _writeLocal(data.state);
+      _setStatusUI(true,'Supabase Live');
+      return data.state;
+    }else if(!data){
+      const seed=_read()||defaultState();
+      await _pushToSupabase(seed);
+      return seed;
+    }
+  }catch(e){
+    console.warn('[Supabase Pull Exception]',e);
+  }
+  return null;
+}
+
+function _setupRealtime(){
+  if(!sb)return;
+  sb.channel('public:'+TABLE_NAME)
+    .on('postgres_changes',{event:'*',schema:'public',table:TABLE_NAME,filter:'id=eq.'+ROW_ID},(payload)=>{
+      if(payload.new&&payload.new.state){
+        _writeLocal(payload.new.state);
+        _emit(_read());
+      }
+    })
+    .subscribe((status)=>{
+      if(status==='SUBSCRIBED'){
+        _setStatusUI(true,'Supabase Live');
+      }
+    });
+}
+
+function _subscribe(cb){
+  if(typeof cb!=='function')return;
+  _listeners.push(cb);
+  if(bc)bc.addEventListener('message',(e)=>{if(e.data&&e.data.type==='SYNC'){_storage.setItem(KEY,JSON.stringify(e.data.state));cb(_read());}});
+  window.addEventListener('storage',(e)=>{if(e.key===KEY&&e.newValue){try{cb(_read());}catch(err){}}});
+}
+
+const _now=()=>new Date().toISOString();
+const _genId=(p)=>p+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+function _err(code,message){const e=new Error(message);e.code=code;throw e;}
+
+function _getCurrentUser(state){
+  const uid=_getSessionUserId();
+  if(!uid)_err('NOT_AUTHENTICATED','Login လုပ်ပါ');
+  const u=state.users.find(x=>x.id===uid);
+  if(!u)_err('USER_NOT_FOUND','အကောင့် မတွေ့ပါ');
+  if(!u.isActive)_err('ACCOUNT_DISABLED','အကောင့် ပိတ်ထားပါသည်');
+  return u;
+}
+
+function _requireAdmin(state){
+  const u=_getCurrentUser(state);
+  if(u.role!=='admin')_err('FORBIDDEN','Admin သာ လုပ်နိုင်သည်');
+  return u;
+}
+
+function _logTx(state,userId,type,amount,description,refType,refId){
+  const user=state.users.find(u=>u.id===userId);
+  if(!user)return;
+  const before=+user.balance;
+  user.balance=+(before+amount).toFixed(2);
+  state.transactions.unshift({id:_genId('tx'),userId,type,amount:+amount,balanceBefore:before,balanceAfter:user.balance,referenceType:refType||null,referenceId:refId||null,description,createdAt:_now()});
+}
+
+async function _mutate(fn){
+  await _pullFromSupabase();
+  let state=_read();
+  if(!state){state=defaultState();_writeLocal(state);}
+  const result=fn(state);
+  _writeLocal(state);
+  await _pushToSupabase(state);
+  _emit(_read());
+  return result;
+}
+
+function _sanitizeUser(u){if(!u)return null;const out=Object.assign({},u);delete out.password;return out;}
+
+const api={
+VERSION,
+init:async function(options){
+  options=options||{};
+  if(!_read()||options.force){
+    _writeLocal(defaultState());
+  }
+  const remote=await _pullFromSupabase();
+  if(remote){
+    _writeLocal(remote);
+  }
+  _setupRealtime();
+  _emit(_read());
+  return _read();
+},
+get:function(){
+  let s=_read();
+  if(!s){s=defaultState();_writeLocal(s);}
+  return s;
+},
+subscribe:function(cb){_subscribe(cb);},
+reset:async function(){
+  const fresh=defaultState();
+  _writeLocal(fresh);
+  await _pushToSupabase(fresh);
+  location.reload();
+},
+auth:{
+register:async function(data){
+  return _mutate(function(state){
+    const name=(data.name||'').trim(),phone=(data.phone||'').trim(),password=data.password||'';
+    if(!name||!phone||password.length<6)_err('VALIDATION','အချက်အလက် မပြည့်စုံပါ (Password အနည်းဆုံး ၆ လုံး)');
+    if(state.users.some(u=>u.phone===phone))_err('PHONE_TAKEN','ဖုန်းနံပါတ် ရှိပြီးသား ဖြစ်သည်');
+    const user={id:_genId('u'),name,phone,password,role:'user',balance:0,spinTickets:1,isActive:true,createdAt:_now()};
+    state.users.push(user);
+    _setSessionUserId(user.id);
+    return{user:_sanitizeUser(user)};
+  });
+},
+login:async function(data){
+  await _pullFromSupabase();
+  const state=api.get();
+  const phone=(data.phone||'').trim();
+  const user=state.users.find(u=>u.phone===phone&&u.password===data.password);
+  if(!user)_err('INVALID_CREDENTIALS','ဖုန်းနံပါတ် သို့မဟုတ် Password မှားနေသည်');
+  if(!user.isActive)_err('ACCOUNT_DISABLED','အကောင့် ပိတ်ထားပါသည်');
+  _setSessionUserId(user.id);
+  _emit(_read());
+  return{user:_sanitizeUser(user)};
+},
+logout:async function(){
+  _setSessionUserId(null);
+  _emit(_read());
+  return{ok:true};
+},
+me:function(){
+  const s=_read();
+  const uid=_getSessionUserId();
+  if(!s||!uid)return null;
+  const u=s.users.find(x=>x.id===uid);
+  if(!u||!u.isActive){
+    if(u&&!u.isActive)_setSessionUserId(null);
+    return null;
+  }
+  return _sanitizeUser(u);
+},
+isAdmin:function(){
+  const me=api.auth.me();
+  return!!(me&&me.role==='admin');
+},
+},
+wallet:{
+requestTopup:async function(data){
+  return _mutate(function(state){
+    const me=_getCurrentUser(state);
+    const amount=Number(data.amount),receipt=String(data.receiptLast6||'').trim();
+    if(!Number.isFinite(amount)||amount<1000)_err('VALIDATION','အနည်းဆုံး 1,000 Ks ဖြစ်ရမည်');
+    if(!/^\d{6}$/.test(receipt))_err('VALIDATION','ပြေစာ နောက်ဆုံး ၆ လုံး ထည့်ပါ');
+    const dup=state.topupRequests.some(r=>r.channelId===data.channelId&&r.receiptLast6===receipt&&r.status!=='rejected');
+    if(dup)_err('DUPLICATE_RECEIPT','ဒီပြေစာနံပါတ် တင်ပြီးသား ဖြစ်သည်');
+    const req={id:_genId('top'),code:'TOP-'+Date.now().toString(36).toUpperCase(),userId:me.id,channelId:data.channelId,amount,receiptLast6:receipt,status:'pending',adminNotes:null,verifiedBy:null,verifiedAt:null,createdAt:_now()};
+    state.topupRequests.unshift(req);
+    return{request:req};
+  });
+},
+approveTopup:async function(data){
+  return _mutate(function(state){
+    const admin=_requireAdmin(state);
+    const req=state.topupRequests.find(r=>r.id===data.requestId);
+    if(!req)_err('NOT_FOUND','တောင်းဆိုမှု မတွေ့ပါ');
+    if(req.status!=='pending')_err('INVALID_STATUS','ကိုင်တွယ်ပြီးဖြစ်သည်');
+    req.status='approved';req.adminNotes=data.notes||null;req.verifiedBy=admin.id;req.verifiedAt=_now();
+    _logTx(state,req.userId,'topup',req.amount,'ငွေဖြည့်အတည်ပြု ('+req.code+')','topup_request',req.id);
+    return{request:req};
+  });
+},
+rejectTopup:async function(data){
+  return _mutate(function(state){
+    const admin=_requireAdmin(state);
+    const req=state.topupRequests.find(r=>r.id===data.requestId);
+    if(!req)_err('NOT_FOUND','တောင်းဆိုမှု မတွေ့ပါ');
+    if(req.status!=='pending')_err('INVALID_STATUS','ကိုင်တွယ်ပြီးသား');
+    req.status='rejected';req.adminNotes=data.notes||'ပယ်ချ';req.verifiedBy=admin.id;req.verifiedAt=_now();
+    return{request:req};
+  });
+},
+listRequests:function(filter){
+  filter=filter||{};
+  const s=api.get();
+  let list=s.topupRequests;
+  if(filter.userId)list=list.filter(r=>r.userId===filter.userId);
+  if(filter.status)list=list.filter(r=>r.status===filter.status);
+  return list;
+},
+},
+orders:{
+place:async function(data){
+  return _mutate(function(state){
+    const me=_getCurrentUser(state);
+    const product=state.products.find(p=>p.id===data.productId&&p.isActive);
+    if(!product)_err('PRODUCT_NOT_FOUND','ပစ္စည်း မတွေ့ပါ');
+    const pkg=product.packages.find(p=>p.id===data.packageId&&p.isActive!==false);
+    if(!pkg)_err('PACKAGE_NOT_FOUND','ပက်ကေ့ချ် မတွေ့ပါ');
+    if(!data.targetAccount||!data.targetAccount.trim())_err('VALIDATION','ID ထည့်ပါ');
+    if(product.needsZone&&(!data.targetZone||!data.targetZone.trim()))_err('VALIDATION','Zone ID ထည့်ပါ');
+    if(me.balance<pkg.price)_err('INSUFFICIENT_BALANCE','လက်ကျန်ငွေ မလုံလောက်ပါ');
+    const order={id:_genId('ord'),code:'LIME-'+Math.floor(10000+Math.random()*90000),userId:me.id,productId:product.id,packageId:pkg.id,productTitle:product.title,productLogo:product.logoUrl,packageName:pkg.name,targetAccount:data.targetAccount.trim(),targetZone:data.targetZone?data.targetZone.trim():null,pricePaid:pkg.price,status:'pending',adminNotes:null,processedBy:null,processedAt:null,createdAt:_now()};
+    state.orders.unshift(order);
+    _logTx(state,me.id,'purchase',-pkg.price,product.title+' — '+pkg.name,'order',order.id);
+    return{order};
+  });
+},
+list:function(filter){
+  filter=filter||{};
+  const s=api.get();
+  let list=s.orders;
+  if(filter.userId)list=list.filter(o=>o.userId===filter.userId);
+  if(filter.status)list=list.filter(o=>o.status===filter.status);
+  return list;
+},
+},
+spin:{
+play:async function(){
+  return _mutate(function(state){
+    const me=_getCurrentUser(state);
+    const cost=state.settings.spinCost||500;
+    if(me.spinTickets>0){
+      me.spinTickets-=1;
+    }else if(me.balance>=cost){
+      _logTx(state,me.id,'spin_cost',-cost,'Spin Cost');
+    }else{
+      _err('INSUFFICIENT_BALANCE','လက်ကျန်ငွေ မလုံလောက်ပါ');
+    }
+    const prizes=state.spinPrizes.filter(p=>p.isActive!==false);
+    if(!prizes.length)_err('NO_PRIZES','ဆုများ မရှိပါ');
+    const totalWeight=prizes.reduce((s,p)=>s+(Number(p.weight)||0),0);
+    let rand=Math.random()*totalWeight,picked=prizes[0];
+    for(let i=0;i<prizes.length;i++){
+      if(rand<prizes[i].weight){picked=prizes[i];break;}
+      rand-=prizes[i].weight;
+    }
+    if(picked.type==='cash'&&picked.value>0)_logTx(state,me.id,'spin_win',+picked.value,'Spin Win: '+picked.title,'spin',null);
+    else if(picked.type==='ticket')me.spinTickets=(me.spinTickets||0)+Number(picked.value||1);
+    return{prize:picked,angle:picked.angle,spinTickets:me.spinTickets,balance:me.balance};
+  });
+},
+},
+users:{list:function(){return api.get().users.map(_sanitizeUser);}},
+products:{list:function(filter){filter=filter||{};const s=api.get();let list=s.products;if(filter.type)list=list.filter(p=>p.type===filter.type);if(filter.activeOnly)list=list.filter(p=>p.isActive!==false);return list;}},
+prizes:{list:function(filter){filter=filter||{};const s=api.get();return filter.activeOnly?s.spinPrizes.filter(p=>p.isActive!==false):s.spinPrizes;}},
+banners:{list:function(filter){filter=filter||{};const s=api.get();return filter.activeOnly?(s.banners||[]).filter(b=>b.isActive!==false):(s.banners||[]);}},
+paymentChannels:{list:function(filter){filter=filter||{};const s=api.get();return filter.activeOnly?s.paymentChannels.filter(c=>c.isActive!==false):s.paymentChannels;}},
+transactions:{list:function(filter){filter=filter||{};const s=api.get();let list=s.transactions;if(filter.userId)list=list.filter(t=>t.userId===filter.userId);if(filter.type)list=list.filter(t=>t.type===filter.type);if(filter.limit)list=list.slice(0,filter.limit);return list;}},
+settings:{get:function(){return api.get().settings||{};}}
+};
+return api;
+})();
+
+const UI={categoryFilter:'all',showAllGames:false,showAllApps:false,selectedChannelId:null,activeItem:null,activePkgIdx:0,wheelRotation:0,isSpinning:false,currentHeroIdx:0,authMode:'login'};
+let activeVoucherData=null;
+
+const getGames=()=>LimeBridge.products.list({type:'game',activeOnly:true}).map(p=>({...p,subTitle:p.subtitle}));
+const getApps=()=>LimeBridge.products.list({type:'app',activeOnly:true}).map(p=>({...p,subTitle:p.subtitle}));
+const getPrizes=()=>LimeBridge.prizes.list({activeOnly:true}).map(p=>({...p,desc:p.description}));
+const getBanners=()=>LimeBridge.banners.list({activeOnly:true}).map(b=>({...b,img:b.imgUrl}));
+const getChannels=()=>LimeBridge.paymentChannels.list({activeOnly:true}).map(c=>({...c,color:c.colorClass||'bg-lime-500 text-surface-950'}));
+const getSettings=()=>{const s=LimeBridge.settings.get();return{...s,hours:s.storeHours||'ဆိုင်ဖွင့်ချိန် (9:00 AM – 11:00 PM)',announcement:s.announcement||'⚡ အော်ဒါများအားလုံး ၁ မိနစ်မှ ၅ မိနစ်အတွင်း အမြန်ဆုံး ဆောင်ရွက်ပေးနေပါသည်။',spinCost:s.spinCost||500};};
+
+function showAuthModal(){document.getElementById('authModal').classList.replace('hidden','flex');document.getElementById('authPhone').value='';document.getElementById('authPassword').value='';document.getElementById('authName').value='';}
+function closeAuthModal(){document.getElementById('authModal').classList.replace('flex','hidden');}
+function toggleAuthMode(){UI.authMode=UI.authMode==='login'?'register':'login';const isReg=UI.authMode==='register';document.getElementById('authTitle').textContent=isReg?'Register':'Login';document.getElementById('authSubtitle').textContent=isReg?'အကောင့်အသစ် ဖွင့်ပါ':'အကောင့်ဖြင့် ဝင်ရောက်ပါ';document.getElementById('authSubmitBtn').textContent=isReg?'Register':'Login';document.getElementById('authToggleBtn').textContent=isReg?'အကောင့်ရှိပြီးသား — Login':'အကောင့်အသစ် ဖွင့်မည်';document.getElementById('authName').classList.toggle('hidden',!isReg);}
+async function submitAuth(){
+  const phone=document.getElementById('authPhone').value.trim();
+  const password=document.getElementById('authPassword').value;
+  const btn=document.getElementById('authSubmitBtn');
+  btn.disabled=true;
+  try{
+    if(UI.authMode==='register'){
+      const name=document.getElementById('authName').value.trim();
+      await LimeBridge.auth.register({name,phone,password});
+    }else{
+      await LimeBridge.auth.login({phone,password});
+    }
+    closeAuthModal();
+    renderAll();
+    showToast(UI.authMode==='register'?'✅ Register အောင်မြင်ပါသည်':'✅ Login အောင်မြင်ပါသည်');
+  }catch(e){
+    showToast('❌ '+e.message);
+  }finally{
+    btn.disabled=false;
+  }
+}
+async function doLogout(){if(!confirm('Logout လုပ်မှာ သေချာလား?'))return;await LimeBridge.auth.logout();toggleQuickMenu(false);showAuthModal();renderAll();showToast('👋 Logout ပြီးပါပြီ');}
+
+function syncState(){
+const me=LimeBridge.auth.me();const settings=getSettings();const balance=me?me.balance:0;const tickets=me?(me.spinTickets||0):0;
+document.getElementById('topBalanceText').textContent=me?balance.toLocaleString():'—';
+document.getElementById('bentoBalanceText').textContent=me?balance.toLocaleString():'—';
+document.getElementById('walletViewBalance').textContent=me?balance.toLocaleString()+' Ks':'— Ks';
+document.getElementById('spinTicketCount').textContent=tickets;
+document.getElementById('bentoTicketCount').textContent=tickets;
+document.getElementById('storeHoursText').textContent=settings.hours;
+const annEl=document.getElementById('storeAnnouncementBanner');
+if(annEl){
+  annEl.textContent=settings.announcement||'';
+  annEl.classList.toggle('hidden',!settings.announcement);
+}
+document.getElementById('spinCostLabel').textContent='၁ ကြိမ် = '+Number(settings.spinCost).toLocaleString()+' Ks';
+document.getElementById('bridgeStatus').textContent=me?'Logged in as '+me.name:'Not logged in';
+if(me){document.getElementById('profileDisplayName').textContent=me.name;document.getElementById('profileDisplayPhone').textContent=me.phone;document.getElementById('profileRoleBadge').textContent=me.role==='admin'?'ADMIN':'MEMBER';}
+else{document.getElementById('profileDisplayName').textContent='Guest';document.getElementById('profileDisplayPhone').textContent='—';document.getElementById('profileRoleBadge').textContent='GUEST';}
+const orders=me?LimeBridge.orders.list({userId:me.id}):[];
+document.getElementById('totalOrdersCount').textContent=orders.length+' Orders';
+renderOrdersFeed(orders);
+const txs=me?LimeBridge.transactions.list({userId:me.id}):[];
+renderHistoryFeed(txs);
+}
+
+function renderOrdersFeed(orders){
+const box=document.getElementById('ordersFeedContainer');
+if(!orders.length){box.innerHTML='<div class="p-6 rounded-3xl bg-surface-900 border border-white/10 text-center text-xs text-gray-400">📦 အော်ဒါများ မရှိသေးပါ</div>';return;}
+box.innerHTML=orders.map(o=>{
+const st={completed:['✓ ပြီးစီး','lime'],pending:['⏳ စောင့်ဆိုင်း','amber'],processing:['⚙️ လုပ်ဆောင်','sky'],rejected:['❌ ပယ်ချ / Refund','rose'],refunded:['↩️ ပြန်အမ်း','gray']}[o.status]||[o.status,'gray'];
+return '<div class="p-4 rounded-3xl bg-surface-900 border border-white/10 space-y-3">'
++'<div class="flex items-center justify-between gap-3">'
++'<div class="flex items-center gap-3 min-w-0">'
++'<img src="'+(o.productLogo||'')+'" loading="lazy" class="w-11 h-11 rounded-2xl object-cover shrink-0" onerror="this.style.background=\'#1b2717\'"/>'
++'<div class="min-w-0">'
++'<div class="text-[10px] text-lime-400 font-display font-bold">'+o.code+'</div>'
++'<div class="font-bold text-xs sm:text-sm text-white truncate">'+o.productTitle+' — '+o.packageName+'</div>'
++'<div class="text-xs text-gray-400 truncate">ID: '+o.targetAccount+(o.targetZone?' ('+o.targetZone+')':'')+'</div>'
++'</div></div>'
++'<div class="text-right shrink-0">'
++'<div class="font-display font-bold text-xs text-lime-400">'+Number(o.pricePaid).toLocaleString()+' Ks</div>'
++'<span class="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-'+st[1]+'-400/15 text-'+st[1]+'-300">'+st[0]+'</span>'
++'</div></div>'
++'<div class="flex gap-2 pt-2 border-t border-white/5">'
++'<button onclick="openVoucherModal(\''+o.id+'\')" class="flex-1 py-2 rounded-xl bg-lime-400/15 hover:bg-lime-400/25 border border-lime-400/30 text-lime-300 font-bold text-[11px]">🧾 ပြေစာကြည့်ရန်</button>'
++'</div></div>';
+}).join('');
+}
+
+function renderHistoryFeed(txs){
+const box=document.getElementById('historyFeedContainer');
+const me=LimeBridge.auth.me();
+const myRequests=me?LimeBridge.wallet.listRequests({userId:me.id}):[];
+const pendingOrRejected=myRequests.filter(r=>r.status==='pending'||r.status==='rejected');
+if(!txs.length&&!pendingOrRejected.length){box.innerHTML='<div class="p-6 rounded-3xl bg-surface-900 border border-white/10 text-center text-xs text-gray-400">📊 မှတ်တမ်း မရှိသေးပါ</div>';return;}
+let html='';
+pendingOrRejected.forEach(r=>{
+  const isPend=r.status==='pending';
+  const ch=LimeBridge.paymentChannels.list().find(c=>c.id===r.channelId)||{name:'Pay'};
+  html+='<div class="p-3.5 rounded-3xl bg-surface-900 border '+(isPend?'border-amber-400/30':'border-rose-500/30')+' flex items-center justify-between gap-3"><div class="flex items-center gap-3 min-w-0"><div class="w-10 h-10 rounded-2xl '+(isPend?'bg-amber-400/15 text-amber-300':'bg-rose-500/20 text-rose-300')+' flex items-center justify-center font-bold shrink-0">'+(isPend?'⏳':'✕')+'</div><div class="min-w-0"><div class="text-[10px] text-gray-400 font-display">'+r.code+' • '+(isPend?'စစ်ဆေးဆဲ':'ပယ်ချခံရသည်')+'</div><div class="font-bold text-xs sm:text-sm text-white truncate">ငွေဖြည့်တောင်းဆိုမှု ('+ch.name+')</div><div class="text-xs text-gray-400 truncate">ပြေစာ #'+r.receiptLast6+'</div></div></div><div class="font-display font-bold text-xs '+(isPend?'text-amber-300':'text-rose-400 line-through')+' shrink-0">'+Number(r.amount).toLocaleString()+' Ks</div></div>';
+});
+html+=txs.map(t=>{const positive=t.amount>0;return '<div class="p-3.5 rounded-3xl bg-surface-900 border border-white/10 flex items-center justify-between gap-3"><div class="flex items-center gap-3 min-w-0"><div class="w-10 h-10 rounded-2xl '+(positive?'bg-lime-400/15 text-lime-400':'bg-surface-800 text-gray-300')+' flex items-center justify-center font-bold shrink-0">'+(positive?'↓':'↑')+'</div><div class="min-w-0"><div class="text-[10px] text-gray-400 font-display">'+t.type+' • '+new Date(t.createdAt).toLocaleString('en-GB',{hour:'2-digit',minute:'2-digit'})+'</div><div class="font-bold text-xs sm:text-sm text-white truncate">'+t.description+'</div></div></div><div class="font-display font-bold text-xs sm:text-sm '+(positive?'text-lime-400':'text-white')+' shrink-0">'+(positive?'+':'')+Number(t.amount).toLocaleString()+' Ks</div></div>';}).join('');
+box.innerHTML=html;
+}
+
+function renderCatalogGrids(searchQuery=''){
+const q=(searchQuery||'').trim().toLowerCase();
+const games=getGames().filter(g=>!q||g.title.toLowerCase().includes(q)||(g.subtitle||'').toLowerCase().includes(q));
+const apps=getApps().filter(a=>!q||a.title.toLowerCase().includes(q)||(a.subtitle||'').toLowerCase().includes(q));
+const visGames=(q||UI.showAllGames)?games:games.slice(0,4);
+const visApps=(q||UI.showAllApps)?apps:apps.slice(0,4);
+document.getElementById('gamesBentoGrid').innerHTML=visGames.map(cardHTML).join('');
+document.getElementById('appsBentoGrid').innerHTML=visApps.map(cardHTML).join('');
+const gRem=Math.max(0,games.length-4),aRem=Math.max(0,apps.length-4);
+const gShow=!q&&gRem>0,aShow=!q&&aRem>0;
+document.getElementById('gamesMoreWrap').classList.toggle('hidden',!gShow);
+document.getElementById('appsMoreWrap').classList.toggle('hidden',!aShow);
+document.getElementById('headerGamesMoreBtn').style.display=gShow?'':'none';
+document.getElementById('headerAppsMoreBtn').style.display=aShow?'':'none';
+document.getElementById('gamesMoreBtn').textContent=UI.showAllGames?'ပြန်သိမ်း ▲':('More +'+gRem+' ▼');
+document.getElementById('appsMoreBtn').textContent=UI.showAllApps?'ပြန်သိမ်း ▲':('More +'+aRem+' ▼');
+document.getElementById('section-games').classList.toggle('hidden',UI.categoryFilter==='apps');
+document.getElementById('section-apps').classList.toggle('hidden',UI.categoryFilter==='games');
+}
+
+function cardHTML(item){
+return '<div onclick="openCheckoutModal(\''+item.id+'\')" class="bento-card cursor-pointer rounded-3xl p-3 flex flex-col justify-between gap-2.5 group">'
++'<div class="flex items-start justify-between gap-2">'
++'<div class="w-14 h-14 apk-icon-wrap shrink-0 border border-white/10"><img src="'+item.logoUrl+'" alt="'+item.title+'" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition" onerror="this.src=\'https://placehold.co/100x100/131c10/a3e635?text=LIME\'"/></div>'
++'<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-surface-950 text-lime-300 border border-lime-400/25">'+(item.tag||'⚡ Instant')+'</span>'
++'</div>'
++'<div><h3 class="font-bold text-xs sm:text-sm text-white truncate group-hover:text-lime-300">'+item.title+'</h3><p class="text-[11px] text-gray-400 truncate">'+(item.subtitle||'')+'</p></div>'
++'<div class="pt-2 border-t border-white/5 flex items-center justify-between">'
++'<span class="text-[10px] font-semibold text-gray-300 truncate">'+(item.startPrice||'')+'</span>'
++'<span class="px-2.5 py-1 rounded-xl bg-lime-400/15 group-hover:bg-lime-400 text-lime-300 group-hover:text-surface-950 font-bold text-[11px] transition">ဝယ်မည်</span>'
++'</div></div>';
+}
+
+function toggleSectionMore(type){if(type==='games')UI.showAllGames=!UI.showAllGames;if(type==='apps')UI.showAllApps=!UI.showAllApps;renderCatalogGrids(document.getElementById('searchInput').value);}
+function setCategoryFilter(cat){
+UI.categoryFilter=cat;
+if(cat==='games')UI.showAllGames=true;if(cat==='apps')UI.showAllApps=true;
+['all','games','apps'].forEach(c=>{const btn=document.getElementById('cat-'+c);btn.className=c===cat?'shrink-0 px-3.5 py-2 rounded-xl text-xs font-bold bg-lime-400 text-surface-950':'shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold bg-surface-800 text-gray-300 border border-white/10';});
+renderCatalogGrids(document.getElementById('searchInput').value);
+}
+
+function renderHeroBanners(){
+const banners=getBanners();const box=document.getElementById('heroSlides'),dots=document.getElementById('heroDots');
+if(!banners.length){box.innerHTML='';dots.innerHTML='';return;}
+if(UI.currentHeroIdx>=banners.length)UI.currentHeroIdx=0;
+box.innerHTML=banners.map((b,i)=>'<div onclick="openCheckoutModal(\''+b.productId+'\')" class="hero-slide absolute inset-0 transition-opacity duration-500 '+(i===UI.currentHeroIdx?'opacity-100':'opacity-0 pointer-events-none')+' cursor-pointer"><img src="'+b.img+'" alt="'+b.title+'" loading="lazy" class="w-full h-full object-cover" onerror="this.style.display=\'none\'"/><div class="absolute inset-0 bg-gradient-to-t from-surface-950 via-surface-950/50 to-transparent flex flex-col justify-end p-4 sm:p-5"><div class="flex items-center gap-2 mb-1"><span class="px-2 py-0.5 rounded-full bg-lime-400 text-surface-950 font-display font-extrabold text-[10px] uppercase">'+(b.badge||'OFFICIAL')+'</span><span class="text-xs text-lime-300 font-semibold">'+(b.sub||'')+'</span></div><h2 class="font-display font-black text-base sm:text-xl text-white">'+b.title+'</h2></div></div>').join('');
+dots.innerHTML=banners.map((_,i)=>'<button onclick="changeHeroSlide('+i+')" class="hero-dot '+(i===UI.currentHeroIdx?'w-6 bg-lime-400':'w-2 bg-white/40')+' h-1.5 rounded-full transition-all"></button>').join('');
+}
+
+function changeHeroSlide(idx){
+UI.currentHeroIdx=idx;
+document.querySelectorAll('.hero-slide').forEach((s,i)=>{s.className='hero-slide absolute inset-0 transition-opacity duration-500 cursor-pointer '+(i===idx?'opacity-100':'opacity-0 pointer-events-none');});
+document.querySelectorAll('.hero-dot').forEach((d,i)=>{d.className='hero-dot '+(i===idx?'w-6 bg-lime-400':'w-2 bg-white/40')+' h-1.5 rounded-full transition-all';});
+}
+
+function renderPaymentChannels(){
+const channels=getChannels();
+if(channels.length&&(!UI.selectedChannelId||!channels.some(c=>c.id===UI.selectedChannelId))){
+  UI.selectedChannelId=channels[0].id;
+}
+document.getElementById('paymentChannelsGrid').innerHTML=channels.map(c=>{const active=c.id===UI.selectedChannelId;return '<button type="button" onclick="selectPayChannel(\''+c.id+'\')" class="pay-channel-btn p-3 rounded-2xl bg-surface-800 '+(active?'border-2 border-lime-400':'border border-white/10')+' text-left"><div class="w-8 h-8 rounded-xl '+(c.colorClass||'bg-lime-500 text-surface-950')+' font-display font-bold text-xs flex items-center justify-center mb-1">'+(c.badge||c.name.slice(0,4))+'</div><div class="text-xs font-bold text-white truncate">'+c.name+'</div></button>';}).join('');
+if(UI.selectedChannelId){const sel=channels.find(c=>c.id===UI.selectedChannelId);if(sel){document.getElementById('payChannelLabel').textContent=sel.name;document.getElementById('payPhoneNumber').textContent=sel.phone;document.getElementById('payHolderName').textContent='Name: '+sel.holder;}}
+}
+
+function selectPayChannel(id){UI.selectedChannelId=id;renderPaymentChannels();}
+function copyReceiverPhone(){const phone=document.getElementById('payPhoneNumber').textContent;navigator.clipboard?.writeText(phone);showToast('📋 '+phone+' Copy ပြီး');}
+
+function renderSpinPrizesTable(){
+const allPrizes=getPrizes();
+const visible=allPrizes.filter(p=>p.showInTable);
+document.getElementById('availablePrizesTable').innerHTML=visible.map(p=>'<div class="py-3.5 px-4 flex items-center justify-between"><span class="font-bold text-white">'+p.title+'</span><span class="text-gray-300">'+p.description+'</span></div>').join('');
+const wheelGroup=document.getElementById('wheelTextGroup');
+if(wheelGroup&&allPrizes.length){
+  wheelGroup.innerHTML=allPrizes.map((p,idx)=>{
+    const angle=p.angle!==undefined?p.angle:(idx*60+30);
+    return `<text transform="translate(130,130) rotate(${angle}) translate(0,-76)">${p.wheelText||p.title}</text>`;
+  }).join('');
+}
+}
+
+function openCheckoutModal(itemId){
+const item=[...getGames(),...getApps()].find(x=>x.id===itemId);if(!item)return showToast('⚠️ ဤပစ္စည်း လက်ရှိတွင် မရနိုင်သေးပါ');
+UI.activeItem=item;UI.activePkgIdx=0;
+document.getElementById('checkoutLogoImg').src=item.logoUrl;
+document.getElementById('checkoutTitle').textContent=item.title;
+document.getElementById('checkoutSubtitle').textContent=item.subtitle||'';
+document.getElementById('checkoutFieldLabel').textContent=item.inputLabel||'အကောင့် / ID ဖြည့်ပါ';
+const fields=document.getElementById('checkoutDynamicFields');
+fields.innerHTML=item.needsZone?'<div class="grid grid-cols-3 gap-2"><input id="inputPlayerId" required placeholder="'+(item.inputLabel||'Player ID')+'" class="col-span-2 px-3 py-2 rounded-xl bg-surface-900 border border-white/15 text-white text-xs focus:outline-none focus:border-lime-400"/><input id="inputZoneId" required placeholder="Zone ID" class="px-3 py-2 rounded-xl bg-surface-900 border border-white/15 text-white text-xs focus:outline-none focus:border-lime-400"/></div>':'<input id="inputPlayerId" required placeholder="'+(item.inputLabel||'Player ID / Username')+'" class="w-full px-3 py-2 rounded-xl bg-surface-900 border border-white/15 text-white text-xs focus:outline-none focus:border-lime-400"/>';
+renderCheckoutPackages();
+document.getElementById('checkoutModal').classList.replace('hidden','flex');
+}
+
+function closeCheckoutModal(){document.getElementById('checkoutModal').classList.replace('flex','hidden');}
+function renderCheckoutPackages(){
+const item=UI.activeItem;
+if(!item||!item.packages||!item.packages.length)return;
+document.getElementById('checkoutPackagesGrid').innerHTML=item.packages.map((pkg,i)=>{const active=i===UI.activePkgIdx;return '<button type="button" onclick="UI.activePkgIdx='+i+';renderCheckoutPackages();" class="p-3 rounded-2xl text-left border '+(active?'bg-lime-400/15 border-2 border-lime-400':'bg-surface-950 border-white/10')+'"><span class="text-[10px] px-1.5 py-0.5 rounded '+(active?'bg-lime-400 text-surface-950 font-bold':'bg-surface-800 text-gray-400')+'">'+(pkg.bonus||'Instant')+'</span><div class="text-xs font-bold text-white mt-1">'+pkg.name+'</div><div class="font-display font-extrabold text-xs text-lime-400 mt-1">'+Number(pkg.price).toLocaleString()+' Ks</div></button>';}).join('');
+document.getElementById('checkoutTotalPrice').textContent=Number(item.packages[UI.activePkgIdx].price).toLocaleString()+' Ks';
+}
+
+async function submitQuickOrder(e){
+e.preventDefault();
+const item=UI.activeItem,pkg=item.packages[UI.activePkgIdx];
+const pid=document.getElementById('inputPlayerId').value.trim(),zid=document.getElementById('inputZoneId')?.value.trim();
+const btn=document.getElementById('checkoutSubmitBtn');
+btn.disabled=true;
+try{
+  await LimeBridge.orders.place({productId:item.id,packageId:pkg.id,targetAccount:pid,targetZone:zid||null});
+  closeCheckoutModal();
+  showToast('🎉 '+pkg.name+' အော်ဒါ တင်ပြီးပါပြီ');
+  syncState();
+  switchMainTab('orders');
+}catch(err){
+  if(err.code==='NOT_AUTHENTICATED'){closeCheckoutModal();showAuthModal();}
+  else if(err.code==='INSUFFICIENT_BALANCE'){closeCheckoutModal();showToast('⚠️ လက်ကျန်ငွေ မလုံလောက်ပါ');switchMainTab('wallet');}
+  else showToast('❌ '+err.message);
+}finally{
+  btn.disabled=false;
+}
+}
+
+async function handleWalletTopUp(e){
+e.preventDefault();
+const amt=parseInt(document.getElementById('topupAmountField').value,10),digits=document.getElementById('topupDigitsField').value.trim();
+const btn=document.getElementById('topupSubmitBtn');
+btn.disabled=true;
+try{
+  await LimeBridge.wallet.requestTopup({channelId:UI.selectedChannelId,amount:amt,receiptLast6:digits});
+  e.target.reset();
+  showToast('📨 တောင်းဆိုမှု တင်ပြီး — Admin အတည်ပြုရန် စောင့်ပါ');
+  syncState();
+  switchMainTab('history');
+}catch(err){
+  if(err.code==='NOT_AUTHENTICATED')showAuthModal();
+  else showToast('❌ '+err.message);
+}finally{
+  btn.disabled=false;
+}
+}
+
+async function startWheelSpin(){
+if(UI.isSpinning)return;
+const btn=document.getElementById('spinStartBtn');btn.disabled=true;btn.textContent='Spinning...';UI.isSpinning=true;
+try{
+  const result=await LimeBridge.spin.play();
+  syncState();
+  const targetMod=(360-(result.angle||30))%360,currentMod=UI.wheelRotation%360;
+  let diff=targetMod-currentMod;if(diff<0)diff+=360;
+  UI.wheelRotation+=(360*6)+diff;
+  document.getElementById('luckyWheelPlate').style.transform='rotate('+UI.wheelRotation+'deg)';
+  setTimeout(()=>{
+    UI.isSpinning=false;btn.disabled=false;btn.textContent='Start';
+    const p=result.prize;
+    if(p.type==='cash'&&p.value>0)showToast('🎉 ဂုဏ်ယူပါသည်! '+p.description);
+    else if(p.type==='ticket')showToast('🎡 Free Spin ရရှိပါသည်!');
+    else showToast('😊 ကျေးဇူးတင်ပါသည်!');
+    syncState();
+  },4250);
+}catch(err){
+  UI.isSpinning=false;btn.disabled=false;btn.textContent='Start';
+  if(err.code==='NOT_AUTHENTICATED')showAuthModal();
+  else if(err.code==='INSUFFICIENT_BALANCE'){showToast('⚠️ လက်ကျန်ငွေ မလုံလောက်ပါ');switchMainTab('wallet');}
+  else showToast('❌ '+err.message);
+}
+}
+
+function getTopBuyersList(){
+  const orders=LimeBridge.orders.list().filter(o=>o.status==='completed');
+  const users=LimeBridge.users.list();
+  const map={};
+  orders.forEach(o=>{
+    map[o.userId]=(map[o.userId]||0)+Number(o.pricePaid||0);
+  });
+  const list=Object.keys(map).map(uid=>{
+    const u=users.find(x=>x.id===uid);
+    return{name:u?u.name:'Lime User',total:map[uid]};
+  }).sort((a,b)=>b.total-a.total).slice(0,5);
+  if(!list.length){
+    return[
+      {name:'Ko Htet Naing',total:1450000},
+      {name:'Lime Pro Gamer',total:980000}
+    ];
+  }
+  return list;
+}
+
+function openInfoModal(type){
+const titleEl=document.getElementById('dynModalTitle'),bodyEl=document.getElementById('dynModalBody'),settings=getSettings();
+if(type==='notice'){
+  titleEl.textContent='📢 ဆိုင်အသိပေးချက်များ';
+  bodyEl.innerHTML=`
+    <div class="p-4 rounded-2xl bg-surface-950 border border-lime-400/30 space-y-1.5">
+      <div class="text-[11px] font-bold text-lime-400 uppercase">⏰ ဆိုင်ဖွင့်ချိန်</div>
+      <p class="text-white font-semibold">${settings.hours}</p>
+    </div>
+    <div class="p-4 rounded-2xl bg-surface-950 border border-white/10 space-y-1.5">
+      <div class="text-[11px] font-bold text-amber-300 uppercase">📣 အထူးကြေညာချက်</div>
+      <p class="text-gray-200 leading-relaxed">${settings.announcement||'လက်ရှိတွင် အထူးကြေညာချက် မရှိသေးပါ။'}</p>
+    </div>`;
+}
+else if(type==='support'){
+  titleEl.textContent='🎧 Admin ဆက်သွယ်ရန်';
+  const tgHandle=(settings.supportTelegram||'').replace('@','').trim();
+  const tgUrl=tgHandle?`https://t.me/${tgHandle}`:'#';
+  bodyEl.innerHTML=`
+    <a href="${tgUrl}" target="_blank" rel="noopener" class="w-full p-3.5 rounded-2xl bg-sky-500/15 hover:bg-sky-500/25 border border-sky-400/30 text-sky-300 font-bold flex justify-between items-center transition">
+      <span>✈️ Telegram</span><span>${settings.supportTelegram||'—'}</span>
+    </a>
+    <div onclick="navigator.clipboard?.writeText('${settings.supportViber||''}');showToast('📋 Viber နံပါတ် Copy ကူးပြီးပါပြီ');" class="cursor-pointer w-full p-3.5 rounded-2xl bg-purple-500/15 hover:bg-purple-500/25 border border-purple-400/30 text-purple-300 font-bold flex justify-between items-center transition">
+      <span>📞 Viber (နှိပ်၍ Copy ကူးရန်)</span><span>${settings.supportViber||'—'}</span>
+    </div>`;
+}
+else if(type==='guide'){
+  titleEl.textContent='📖 အသုံးပြုနည်း';
+  bodyEl.innerHTML='<div class="p-3 rounded-xl bg-surface-950 border border-white/5">၁။ ငွေဖြည့် တက်ဘ်မှတစ်ဆင့် မိမိနှစ်သက်ရာ Pay ဖြင့် ငွေဖြည့်သွင်းပါ။</div><div class="p-3 rounded-xl bg-surface-950 border border-white/5">၂။ ဝယ်ယူလိုသော ဂိမ်း သို့မဟုတ် Digital Service ကို ရွေးချယ်ပါ။</div><div class="p-3 rounded-xl bg-surface-950 border border-white/5">၃။ Player ID / Zone ID သို့မဟုတ် Username ထည့်ပြီး ဝယ်ယူပါ။</div><div class="p-3 rounded-xl bg-surface-950 border border-white/5">၄။ အော်ဒါ တက်ဘ်တွင် ပြေစာနှင့် အော်ဒါအခြေအနေကို အချိန်နှင့်တစ်ပြေးညီ စစ်ဆေးနိုင်ပါသည်။</div>';
+}
+else if(type==='topbuyers'){
+  titleEl.textContent='🏆 Top Buyers Leaderboard';
+  const topList=getTopBuyersList();
+  bodyEl.innerHTML=topList.map((u,idx)=>`<div class="p-3 rounded-2xl ${idx===0?'bg-amber-400/15 border border-amber-400/30':'bg-surface-950 border border-white/5'} flex justify-between items-center font-bold"><span>${idx+1}. ${u.name}</span><span class="${idx===0?'text-amber-300':'text-lime-400'} font-display">${Number(u.total).toLocaleString()} Ks</span></div>`).join('');
+}
+document.getElementById('dynamicInfoModal').classList.replace('hidden','flex');
+}
+
+function closeInfoModal(){document.getElementById('dynamicInfoModal').classList.replace('flex','hidden');}
+function toggleQuickMenu(show){document.getElementById('quickMenuModal').classList.toggle('hidden',!show);document.getElementById('quickMenuModal').classList.toggle('flex',show);}
+function switchMainTab(tab){
+['store','spin','wallet','orders','history','profile'].forEach(t=>{
+document.getElementById('tab-'+t)?.classList.toggle('hidden',t!==tab);
+const dock=document.getElementById('dock-'+t);
+if(dock&&t!=='wallet'){dock.className=t===tab?'dock-btn flex-1 py-1 flex flex-col items-center gap-1 text-lime-400':'dock-btn flex-1 py-1 flex flex-col items-center gap-1 text-gray-400';}
+});
+window.scrollTo({top:0,behavior:'smooth'});
+}
+
+let toastTimer=null;
+function showToast(msg){const box=document.getElementById('toastNotification');document.getElementById('toastMessage').textContent=msg;box.classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>box.classList.add('hidden'),3000);}
+
+/* ===== VOUCHER SYSTEM ===== */
+function openVoucherModal(orderId){
+const me=LimeBridge.auth.me();if(!me)return showAuthModal();
+const o=LimeBridge.orders.list({userId:me.id}).find(x=>x.id===orderId);
+if(!o)return showToast('❌ အော်ဒါ မတွေ့ပါ');
+activeVoucherData=o;
+document.getElementById('voucherCode').textContent=o.code;
+const s={completed:['✓ ပြီးစီး','bg-lime-400/20 text-lime-300'],pending:['⏳ စောင့်ဆိုင်း','bg-amber-400/20 text-amber-300'],processing:['⚙️ လုပ်ဆောင်','bg-sky-400/20 text-sky-300'],rejected:['❌ ပယ်ချ / Refund ပြန်အမ်းပြီး','bg-rose-400/20 text-rose-300'],refunded:['↩️ ပြန်အမ်း','bg-gray-400/20 text-gray-300']}[o.status]||[o.status,'bg-gray-400/20 text-gray-300'];
+document.getElementById('voucherStatus').innerHTML='<span class="inline-block px-3 py-1 rounded-full '+s[1]+' text-[11px] font-bold">'+s[0]+'</span>';
+const rows=[
+['ပစ္စည်း',o.productTitle],
+['ပက်ကေ့ချ်',o.packageName],
+['အကောင့် ID',o.targetAccount+(o.targetZone?' ('+o.targetZone+')':'')],
+['ကျသင့်ငွေ',Number(o.pricePaid).toLocaleString()+' Ks'],
+['အချိန်',new Date(o.createdAt).toLocaleString('en-GB',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})]
+];
+if(o.processedAt){
+  rows.push(['အတည်ပြုချိန်',new Date(o.processedAt).toLocaleString('en-GB',{year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'})]);
+}
+document.getElementById('voucherBody').innerHTML=rows.map(r=>'<div class="flex justify-between gap-3 py-1.5 border-b border-dashed border-white/10 last:border-0"><span class="text-gray-400 shrink-0">'+r[0]+'</span><span class="font-bold text-white text-right break-all">'+r[1]+'</span></div>').join('');
+document.getElementById('voucherModal').classList.replace('hidden','flex');
+}
+function closeVoucherModal(){document.getElementById('voucherModal').classList.replace('flex','hidden');}
+function copyVoucherText(){
+if(!activeVoucherData)return;
+const o=activeVoucherData;
+const txt='LIME GAME STORE VOUCHER\n━━━━━━━━━━━━━━━━━\nCode: '+o.code+'\nProduct: '+o.productTitle+'\nPackage: '+o.packageName+'\nAccount: '+o.targetAccount+(o.targetZone?' ('+o.targetZone+')':'')+'\nPrice: '+Number(o.pricePaid).toLocaleString()+' Ks\nStatus: '+o.status.toUpperCase()+'\nDate: '+new Date(o.createdAt).toLocaleString();
+navigator.clipboard?.writeText(txt).then(()=>showToast('📋 ပြေစာ Copy ပြီး')).catch(()=>showToast('❌ Copy မရပါ'));
+}
+
+function renderAll(){
+  renderHeroBanners();
+  renderCatalogGrids(document.getElementById('searchInput')?.value||'');
+  renderSpinPrizesTable();
+  renderPaymentChannels();
+  syncState();
+  if(activeVoucherData&&!document.getElementById('voucherModal').classList.contains('hidden')){
+    openVoucherModal(activeVoucherData.id);
+  }
+}
+
+window.addEventListener('DOMContentLoaded',async ()=>{
+  await LimeBridge.init();
+  renderAll();
+  LimeBridge.subscribe(()=>{
+    renderAll();
+  });
+  if(!LimeBridge.auth.me())showAuthModal();
+  setInterval(()=>{const banners=getBanners();if(banners.length)changeHeroSlide((UI.currentHeroIdx+1)%banners.length);},4800);
+});
+</script>
+</body>
+</html>
